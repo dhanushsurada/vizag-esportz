@@ -7,8 +7,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(
-            "ALTER TABLE registrations ADD COLUMN IF NOT EXISTS notes TEXT NOT NULL DEFAULT '';",
-            reverse_sql="ALTER TABLE registrations DROP COLUMN IF EXISTS notes;",
+        migrations.AddField(
+            model_name='registration',
+            name='notes',
+            field=models.TextField(blank=True, default=''),
         ),
     ]

@@ -31,7 +31,7 @@ def send_verification_email(request, user, token_obj):
         'user': user,
         'verify_url': verify_url,
         'token': token_obj,
-        'site_name': 'NSRIT eSports Arena',
+        'site_name': 'Vizag Esportz',
         'expires_hours': 24,
     }
     html_body = render_to_string('accounts/emails/verification_email.html', context)
@@ -39,9 +39,9 @@ def send_verification_email(request, user, token_obj):
 
     try:
         msg = EmailMultiAlternatives(
-            subject='🎮 Verify Your NSRIT eSports Arena Email',
+            subject='🎮 Verify Your Vizag Esportz Email',
             body=text_body,
-            from_email=f'NSRIT eSports Arena <{settings.EMAIL_HOST_USER or "noreply@nsrit.edu.in"}>',
+            from_email=f'Vizag Esportz <{settings.EMAIL_HOST_USER or "noreply@vizagesportz.com"}>',
             to=[user.email],
         )
         msg.attach_alternative(html_body, 'text/html')
@@ -64,7 +64,7 @@ def send_password_reset_email(request, user, token_obj):
         'user': user,
         'reset_url': reset_url,
         'token': token_obj,
-        'site_name': 'NSRIT eSports Arena',
+        'site_name': 'Vizag Esportz',
         'expires_minutes': 30,
     }
     html_body = render_to_string('accounts/emails/password_reset_email.html', context)
@@ -72,9 +72,9 @@ def send_password_reset_email(request, user, token_obj):
 
     try:
         msg = EmailMultiAlternatives(
-            subject='🔑 Reset Your NSRIT eSports Arena Password',
+            subject='🔑 Reset Your Vizag Esportz Password',
             body=text_body,
-            from_email=f'NSRIT eSports Arena <{settings.EMAIL_HOST_USER or "noreply@nsrit.edu.in"}>',
+            from_email=f'Vizag Esportz <{settings.EMAIL_HOST_USER or "noreply@vizagesportz.com"}>',
             to=[user.email],
         )
         msg.attach_alternative(html_body, 'text/html')

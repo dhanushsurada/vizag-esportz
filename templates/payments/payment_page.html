@@ -105,7 +105,7 @@ RAZORPAY DISABLED#}
                         <div class="text-center mb-4 p-3" style="background:rgba(255,255,255,0.05);border-radius:8px;border:1px solid rgba(0,245,255,0.2);">
                             <div class="text-secondary small mb-2">Scan QR to Pay ₹{{ amount_inr }}</div>
                             <!-- UPI QR via Google Charts API -->
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa={{ upi_id|default:'nsritesports@upi' }}&pn=NSRIT+eSports+Arena&am={{ amount_inr }}&cu=INR&tn=Tournament+{{ tournament.id }}"
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa={{ upi_id|default:'nsritesports@upi' }}&pn=Vizag+Esportz&am={{ amount_inr }}&cu=INR&tn=Tournament+{{ tournament.id }}"
                                  alt="UPI QR Code"
                                  style="border-radius:8px;border:3px solid #00F5FF;width:180px;height:180px;"
                                  onerror="this.style.display='none';document.getElementById('qr-fallback').style.display='block'">
@@ -206,7 +206,7 @@ function openRazorpay() {
         "key": "{{ razorpay_key }}",
         "amount": "{{ amount }}",
         "currency": "{{ currency }}",
-        "name": "NSRIT eSports Arena",
+        "name": "Vizag Esportz",
         "description": "Tournament: {{ tournament.title }}",
         "order_id": "{{ razorpay_order_id }}",
         "prefill": {

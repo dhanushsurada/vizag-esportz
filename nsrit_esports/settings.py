@@ -134,7 +134,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 # ── Razorpay ──────────────────────────────────────────────────────────────────
 RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='rzp_test_key_id')
 RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET', default='rzp_test_key_secret')
-UPI_ID = config('UPI_ID', default='nsritesports@upi')
+UPI_ID = config('UPI_ID', default='vizagesportz@upi')
 
 # ── Email ─────────────────────────────────────────────────────────────────────
 # In development, emails are printed to the console.

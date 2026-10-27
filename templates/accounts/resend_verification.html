@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Resend Verification Email — NSRIT eSports Arena{% endblock %}
+{% block title %}Resend Verification Email — Vizag Esportz{% endblock %}
 {% block content %}
 <section class="d-flex align-items-center justify-content-center py-5" style="min-height:85vh;">
   <div class="container">
@@ -23,13 +23,13 @@
             Resend Verification Email
           </h5>
           <p class="text-secondary small text-center mb-4">
-            Enter your NSRIT email address and we'll send you a fresh verification link.
+            Enter your registered email address and we'll send you a fresh verification link.
           </p>
 
           <form method="post" novalidate>
             {% csrf_token %}
             <div class="mb-4">
-              <label class="form-label">NSRIT Email Address</label>
+              <label class="form-label">Email Address</label>
               {{ form.email }}
               {% if form.email.errors %}
               <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
