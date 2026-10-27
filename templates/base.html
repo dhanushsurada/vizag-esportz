@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}NSRIT eSports Arena{% endblock %}</title>
-    <meta name="description" content="NSRIT eSports Arena - Where Campus Legends Rise">
+    <title>{% block title %}Vizag Esportz{% endblock %}</title>
+    <meta name="description" content="Vizag Esportz - Play Together. Compete Together.">
 
     <!-- Google Fonts: Gaming Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- NSRIT eSports Arena Custom CSS -->
+    <!-- Vizag Esportz Custom CSS -->
     <link href="{% load static %}{% static 'css/arena.css' %}" rel="stylesheet">
     {% load static %}
 
@@ -30,18 +30,12 @@
     <nav class="navbar navbar-expand-lg arena-navbar sticky-top">
         <div class="container-xl">
 
-            <!-- NSRIT Logo & Brand -->
+            <!-- VIZAG Logo & Brand -->
             <a class="navbar-brand arena-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
-                <div class="brand-icon">
-                    <svg width="40" height="40" viewBox="0 0 40 40">
-                        <polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="#C41212" stroke-width="2"/>
-                        <polygon points="20,8 32,14 32,26 20,32 8,26 8,14" fill="#C41212" opacity="0.3"/>
-                        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF" font-family="Orbitron" font-size="12" font-weight="900">NSR</text>
-                    </svg>
-                </div>
+                <div class="brand-icon"><img src="{% static 'images/vizag-esportz-logo.png' %}" alt="Vizag Esportz logo" width="48" height="48"></div>
                 <div class="brand-text">
-                    <span class="brand-title">NSRIT</span>
-                    <span class="brand-subtitle">eSports Arena</span>
+                    <span class="brand-title">VIZAG</span>
+                    <span class="brand-subtitle">ESPORTZ</span>
                 </div>
             </a>
 
@@ -129,11 +123,11 @@
                 <!-- Brand -->
                 <div class="col-lg-4">
                     <div class="footer-brand mb-3">
-                        <h4 class="orbitron text-white mb-1">NSRIT <span class="text-red">eSports</span> Arena</h4>
-                        <p class="text-secondary small">Where Campus Legends Rise</p>
+                        <h4 class="orbitron text-white mb-1">VIZAG <span class="text-red">ESPORTZ</span></h4>
+                        <p class="text-secondary small">Play Together. Compete Together.</p>
                     </div>
                     <p class="text-secondary small">
-                        Official esports tournament platform of Nadimpalli Satyanarayana Raju Institute of Technology.
+                        An independent, community-driven esports platform connecting gamers across Visakhapatnam and beyond.
                         Compete, connect, and conquer!
                     </p>
                     <div class="footer-social mt-3 d-flex gap-2">
@@ -174,15 +168,15 @@
                     <div class="footer-contact">
                         <p class="text-secondary small">
                             <i class="bi bi-geo-alt-fill text-red me-2"></i>
-                            NSRIT Campus, Sontyam, Visakhapatnam - 531173
+                            Visakhapatnam, Andhra Pradesh
                         </p>
                         <p class="text-secondary small">
                             <i class="bi bi-envelope-fill text-red me-2"></i>
-                            esports@nsrit.edu.in
+                            Contact details coming soon
                         </p>
                         <p class="text-secondary small">
                             <i class="bi bi-discord text-red me-2"></i>
-                            discord.gg/nsrit-esports
+                            Community links coming soon
                         </p>
                     </div>
                 </div>
@@ -191,7 +185,7 @@
             <hr class="border-secondary mt-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center pt-2">
                 <p class="text-secondary small mb-0">
-                    © 2024 NSRIT eSports Arena. All rights reserved. | Nadimpalli Satyanarayana Raju Institute of Technology
+                    © 2026 Vizag Esportz. Community driven. All rights reserved.
                 </p>
                 <p class="text-secondary small mb-0">
                     Built with <span class="text-red">♥</span> using Django

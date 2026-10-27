@@ -1,5 +1,5 @@
 """
-NSRIT eSports Arena - Main URL Configuration
+Vizag Esportz - Main URL Configuration
 Admin URL is read from settings (configurable via .env for security).
 """
 from django.contrib import admin
@@ -48,6 +48,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # ── Admin site branding ───────────────────────────────────────────────────────
-admin.site.site_header = "NSRIT eSports Arena — Control Panel"
-admin.site.site_title = "NSRIT eSports"
-admin.site.index_title = "Arena Administration"
+admin.site.site_header = "Vizag Esportz — Control Panel"
+admin.site.site_title = "Vizag Esportz"
+admin.site.index_title = "Vizag Esportz Administration"

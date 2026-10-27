@@ -1,391 +1,44 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block title %}NSRIT eSports Arena — Where Campus Legends Rise{% endblock %}
-
+{% block title %}Vizag Esportz — Play Together. Compete Together.{% endblock %}
 {% block content %}
-
-<!-- ══════════ HERO SECTION ══════════ -->
-<section class="hero-section">
-    <div class="hero-bg-layers">
-        <div class="hero-gradient"></div>
-        <div class="hero-particles" id="heroParticles"></div>
-        <div class="hero-grid-lines"></div>
-        <div class="hero-glow-red"></div>
-        <div class="hero-glow-cyan"></div>
+<section class="ve-hero">
+  <div class="ve-hero-art" aria-hidden="true"></div>
+  <div class="container-xl ve-hero-inner">
+    <div class="ve-hero-copy">
+      <div class="ve-eyebrow"><span></span> VISAKHAPATNAM • GAMING COMMUNITY</div>
+      <h1>VIZAG<br><span>ESPORTZ</span></h1>
+      <p class="ve-tagline">PLAY TOGETHER. <b>COMPETE TOGETHER.</b></p>
+      <p class="ve-intro">A community-driven esports platform for gamers across Visakhapatnam and beyond. Find your squad, compete in tournaments, and help build the local gaming scene.</p>
+      <div class="ve-actions">
+        <a href="{% url 'tournaments:list' %}" class="btn btn-arena-primary btn-lg"><i class="bi bi-trophy-fill me-2"></i>Explore Tournaments <i class="bi bi-arrow-right ms-2"></i></a>
+        {% if user.is_authenticated %}<a href="{% url 'players:dashboard' %}" class="btn btn-arena-outline btn-lg"><i class="bi bi-speedometer2 me-2"></i>My Dashboard</a>{% else %}<a href="{% url 'accounts:register' %}" class="btn btn-arena-outline btn-lg"><i class="bi bi-people-fill me-2"></i>Join the Community</a>{% endif %}
+      </div>
+      <div class="ve-principles"><span><i class="bi bi-shield-check"></i> Fair play</span><span><i class="bi bi-people"></i> Open community</span><span><i class="bi bi-controller"></i> Built for gamers</span></div>
     </div>
-
-    <div class="container-xl hero-content">
-        <div class="row align-items-center min-vh-80">
-            <div class="col-lg-7">
-                <!-- NSRIT Badge -->
-                <div class="hero-badge mb-3">
-                    <span class="badge-dot"></span>
-                    <span>SEASON 1 — NOW LIVE</span>
-                </div>
-
-                <!-- Title -->
-                <h1 class="hero-title orbitron">
-                    <span class="hero-title-nsrit">NSRIT</span><br>
-                    <span class="hero-title-esports">eSports</span>
-                    <span class="hero-title-arena">Arena</span>
-                </h1>
-
-                <!-- Tagline -->
-                <p class="hero-tagline rajdhani">
-                    <span class="text-red">⚔</span>
-                    Where Campus Legends Rise
-                    <span class="text-red">⚔</span>
-                </p>
-
-                <!-- Sub-description -->
-                <p class="hero-description text-secondary">
-                    Compete in BGMI, Valorant, COD Mobile & more. Register your team,
-                    climb the leaderboard, and claim your place among NSRIT's elite warriors.
-                </p>
-
-                <!-- CTA Buttons -->
-                <div class="hero-cta d-flex flex-wrap gap-3 mt-4">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'tournaments:list' %}" class="btn btn-arena-primary btn-lg">
-                            <i class="bi bi-trophy-fill me-2"></i>View Tournaments
-                        </a>
-                        <a href="{% url 'players:dashboard' %}" class="btn btn-arena-outline btn-lg">
-                            <i class="bi bi-speedometer2 me-2"></i>My Dashboard
-                        </a>
-                    {% else %}
-                        <a href="{% url 'accounts:register' %}" class="btn btn-arena-primary btn-lg">
-                            <i class="bi bi-controller me-2"></i>Join the Arena
-                        </a>
-                        <a href="{% url 'tournaments:list' %}" class="btn btn-arena-outline btn-lg">
-                            <i class="bi bi-eye me-2"></i>View Tournaments
-                        </a>
-                    {% endif %}
-                </div>
-
-                <!-- Quick Stats -->
-                <div class="hero-stats d-flex flex-wrap gap-4 mt-5">
-                    <div class="stat-item">
-                        <span class="stat-number orbitron">50+</span>
-                        <span class="stat-label">Players</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number orbitron">10+</span>
-                        <span class="stat-label">Tournaments</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number orbitron">₹50K+</span>
-                        <span class="stat-label">Prize Pool</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number orbitron">5+</span>
-                        <span class="stat-label">Games</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hero Visual -->
-            <div class="col-lg-5 d-none d-lg-block">
-                <div class="hero-visual">
-                    <div class="hero-hexagon">
-                        <svg viewBox="0 0 300 300" width="300" height="300">
-                            <defs>
-                                <filter id="glow">
-                                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                                    <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                                </filter>
-                            </defs>
-                            <!-- Outer hex -->
-                            <polygon points="150,10 270,80 270,220 150,290 30,220 30,80"
-                                fill="none" stroke="#C41212" stroke-width="2" filter="url(#glow)"/>
-                            <!-- Middle hex -->
-                            <polygon points="150,40 245,95 245,205 150,260 55,205 55,95"
-                                fill="#0B0F1A" stroke="#00F5FF" stroke-width="1" opacity="0.6"/>
-                            <!-- Inner hex -->
-                            <polygon points="150,70 220,110 220,190 150,230 80,190 80,110"
-                                fill="#C41212" opacity="0.15"/>
-                            <!-- NSR Text -->
-                            <text x="150" y="140" text-anchor="middle" fill="#FFFFFF"
-                                font-family="Orbitron" font-size="36" font-weight="900">NSR</text>
-                            <text x="150" y="170" text-anchor="middle" fill="#00F5FF"
-                                font-family="Rajdhani" font-size="14">eSports Arena</text>
-                            <!-- Decorative dots -->
-                            <circle cx="150" cy="10" r="4" fill="#C41212" filter="url(#glow)"/>
-                            <circle cx="270" cy="80" r="4" fill="#00F5FF" filter="url(#glow)"/>
-                            <circle cx="270" cy="220" r="4" fill="#C41212" filter="url(#glow)"/>
-                            <circle cx="150" cy="290" r="4" fill="#00F5FF" filter="url(#glow)"/>
-                            <circle cx="30" cy="220" r="4" fill="#C41212" filter="url(#glow)"/>
-                            <circle cx="30" cy="80" r="4" fill="#00F5FF" filter="url(#glow)"/>
-                        </svg>
-                    </div>
-                    <!-- Orbiting game icons -->
-                    <div class="orbit-ring">
-                        <div class="orbit-item" style="--angle:0deg"><span>🎮</span></div>
-                        <div class="orbit-item" style="--angle:60deg"><span>⚔️</span></div>
-                        <div class="orbit-item" style="--angle:120deg"><span>🏆</span></div>
-                        <div class="orbit-item" style="--angle:180deg"><span>🎯</span></div>
-                        <div class="orbit-item" style="--angle:240deg"><span>💥</span></div>
-                        <div class="orbit-item" style="--angle:300deg"><span>🛡️</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scroll indicator -->
-    <div class="hero-scroll-indicator">
-        <div class="scroll-arrow"></div>
-    </div>
+    <div class="ve-hero-logo"><div class="ve-logo-orbit"></div><img src="{% static 'images/vizag-esportz-logo.png' %}" alt="Vizag Esportz emblem"></div>
+  </div>
 </section>
-
-<!-- ══════════ GAMES BANNER ══════════ -->
-<section class="games-ticker">
-    <div class="ticker-track">
-        <div class="ticker-item"><i class="bi bi-dot text-red"></i> BGMI</div>
-        <div class="ticker-item"><i class="bi bi-dot text-cyan"></i> VALORANT</div>
-        <div class="ticker-item"><i class="bi bi-dot text-red"></i> COD MOBILE</div>
-        <div class="ticker-item"><i class="bi bi-dot text-cyan"></i> FREE FIRE</div>
-        <div class="ticker-item"><i class="bi bi-dot text-red"></i> COUNTER-STRIKE 2</div>
-        <div class="ticker-item"><i class="bi bi-dot text-cyan"></i> FIFA</div>
-        <div class="ticker-item"><i class="bi bi-dot text-red"></i> CHESS ONLINE</div>
-        <!-- Duplicate for seamless loop -->
-        <div class="ticker-item"><i class="bi bi-dot text-red"></i> BGMI</div>
-        <div class="ticker-item"><i class="bi bi-dot text-cyan"></i> VALORANT</div>
-        <div class="ticker-item"><i class="bi bi-dot text-red"></i> COD MOBILE</div>
-        <div class="ticker-item"><i class="bi bi-dot text-cyan"></i> FREE FIRE</div>
-    </div>
+<section class="ve-stats container-xl">
+  <div><i class="bi bi-people-fill"></i><strong>Community first</strong><span>Players from across Vizag</span></div>
+  <div><i class="bi bi-trophy-fill"></i><strong>Compete</strong><span>Online tournaments and events</span></div>
+  <div><i class="bi bi-controller"></i><strong>Find your squad</strong><span>Connect with local gamers</span></div>
+  <div><i class="bi bi-lightning-charge-fill"></i><strong>Grow together</strong><span>Showcase skills and talent</span></div>
 </section>
-
-<!-- ══════════ FEATURED TOURNAMENTS ══════════ -->
-<section class="section-arena py-5">
-    <div class="container-xl">
-        <div class="section-header text-center mb-5">
-            <div class="section-badge">⚡ FEATURED</div>
-            <h2 class="section-title orbitron">Featured <span class="text-red">Tournaments</span></h2>
-            <p class="text-secondary">Flagship competitions with the biggest prize pools</p>
-            <div class="section-line"></div>
-        </div>
-
-        {% if featured_tournaments %}
-        <div class="row g-4">
-            {% for tournament in featured_tournaments %}
-            <div class="col-lg-4 col-md-6">
-                <div class="tournament-card featured-card">
-                    <div class="card-badge-featured">FEATURED</div>
-                    <div class="card-game-icon">
-                        {% if tournament.game == 'BGMI' %}🎯
-                        {% elif tournament.game == 'VALORANT' %}⚔️
-                        {% elif tournament.game == 'COD' %}💥
-                        {% elif tournament.game == 'FREE_FIRE' %}🔥
-                        {% else %}🎮{% endif %}
-                    </div>
-                    <div class="card-body-arena">
-                        <div class="card-tags d-flex gap-2 mb-2">
-                            <span class="tag-game">{{ tournament.game }}</span>
-                            <span class="tag-mode">{{ tournament.mode }}</span>
-                        </div>
-                        <h5 class="card-title-arena rajdhani">{{ tournament.title }}</h5>
-                        <p class="card-text-arena text-secondary small">{{ tournament.description|truncatechars:80 }}</p>
-
-                        <div class="card-stats d-flex justify-content-between mt-3">
-                            <div class="card-stat">
-                                <span class="stat-label">Prize Pool</span>
-                                <span class="stat-val text-gold">₹{{ tournament.prize_pool }}</span>
-                            </div>
-                            <div class="card-stat">
-                                <span class="stat-label">Entry</span>
-                                <span class="stat-val {% if tournament.entry_fee == 0 %}text-green{% else %}text-cyan{% endif %}">
-                                    {% if tournament.entry_fee == 0 %}FREE{% else %}₹{{ tournament.entry_fee }}{% endif %}
-                                </span>
-                            </div>
-                            <div class="card-stat">
-                                <span class="stat-label">Slots</span>
-                                <span class="stat-val text-red">{{ tournament.slots_remaining }}/{{ tournament.max_players }}</span>
-                            </div>
-                        </div>
-
-                        <!-- Slot fill bar -->
-                        <div class="slot-bar mt-2">
-                            <div class="slot-fill" style="width: {{ tournament.fill_percentage }}%"></div>
-                        </div>
-
-                        <div class="card-footer-arena mt-3 d-flex justify-content-between align-items-center">
-                            <span class="status-badge status-{{ tournament.status|lower }}">
-                                {{ tournament.get_status_display }}
-                            </span>
-                            <a href="{{ tournament.get_absolute_url }}" class="btn btn-arena-sm">
-                                View <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state text-center py-5">
-            <div class="empty-icon">🏆</div>
-            <p class="text-secondary">No featured tournaments yet. Check back soon!</p>
-        </div>
-        {% endif %}
-    </div>
+<section class="ve-section container-xl">
+  <div class="ve-section-head"><div><span class="ve-kicker">YOUR NEXT MATCH STARTS HERE</span><h2>WHAT WE <em>DO</em></h2><p>More than a tournament page. A home for the city's gaming community.</p></div></div>
+  <div class="row g-3">
+    <div class="col-md-6 col-xl-3"><a class="ve-feature" href="{% url 'tournaments:list' %}"><span class="ve-feature-icon"><i class="bi bi-trophy"></i></span><h3>Tournaments</h3><p>Discover competitions, registration details, schedules and results.</p><span class="ve-feature-link">Explore events <i class="bi bi-arrow-up-right"></i></span></a></div>
+    <div class="col-md-6 col-xl-3"><a class="ve-feature" href="{% url 'teams:list' %}"><span class="ve-feature-icon"><i class="bi bi-people"></i></span><h3>Squads & Teams</h3><p>Find teammates, build a squad and connect with players.</p><span class="ve-feature-link">Find a squad <i class="bi bi-arrow-up-right"></i></span></a></div>
+    <div class="col-md-6 col-xl-3"><a class="ve-feature" href="{% url 'leaderboard:leaderboard' %}"><span class="ve-feature-icon"><i class="bi bi-bar-chart-line"></i></span><h3>Leaderboard</h3><p>Follow rankings and recognise competitive performance.</p><span class="ve-feature-link">View rankings <i class="bi bi-arrow-up-right"></i></span></a></div>
+    <div class="col-md-6 col-xl-3"><a class="ve-feature" href="{% url 'players:player_list' %}"><span class="ve-feature-icon"><i class="bi bi-person-badge"></i></span><h3>Player Spotlight</h3><p>Discover players and help put local gaming talent on the map.</p><span class="ve-feature-link">Meet players <i class="bi bi-arrow-up-right"></i></span></a></div>
+  </div>
 </section>
-
-<!-- ══════════ OPEN REGISTRATIONS ══════════ -->
-<section class="section-dark py-5">
-    <div class="container-xl">
-        <div class="section-header d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="section-title orbitron mb-1">Open <span class="text-cyan">Registrations</span></h2>
-                <p class="text-secondary small mb-0">Tournaments currently accepting players</p>
-            </div>
-            <a href="{% url 'tournaments:list' %}" class="btn btn-arena-outline btn-sm">
-                All Tournaments <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-
-        {% if open_tournaments %}
-        <div class="row g-3">
-            {% for tournament in open_tournaments %}
-            <div class="col-lg-4 col-md-6">
-                <div class="tournament-card-mini">
-                    <div class="mini-card-left">
-                        <div class="mini-game-badge">{{ tournament.game }}</div>
-                        <h6 class="mini-card-title rajdhani">{{ tournament.title }}</h6>
-                        <div class="d-flex gap-2 align-items-center">
-                            <span class="mini-tag">{{ tournament.get_mode_display }}</span>
-                            <span class="mini-deadline text-secondary small">
-                                <i class="bi bi-clock"></i>
-                                Deadline: {{ tournament.registration_deadline|date:"d M" }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="mini-card-right">
-                        <div class="mini-entry">
-                            {% if tournament.entry_fee == 0 %}
-                            <span class="text-green fw-bold">FREE</span>
-                            {% else %}
-                            <span class="text-cyan fw-bold">₹{{ tournament.entry_fee }}</span>
-                            {% endif %}
-                        </div>
-                        <a href="{{ tournament.get_absolute_url }}" class="btn btn-arena-xs mt-2">
-                            Register
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state text-center py-4">
-            <p class="text-secondary">No open registrations at the moment. Stay tuned!</p>
-        </div>
-        {% endif %}
-    </div>
-</section>
-
-<!-- ══════════ TOP PLAYERS (LEADERBOARD PREVIEW) ══════════ -->
-<section class="section-arena py-5">
-    <div class="container-xl">
-        <div class="section-header text-center mb-5">
-            <div class="section-badge">🏆 RANKINGS</div>
-            <h2 class="section-title orbitron">Arena <span class="text-red">Legends</span></h2>
-            <p class="text-secondary">Top warriors of NSRIT eSports Arena</p>
-            <div class="section-line"></div>
-        </div>
-
-        {% if top_players %}
-        <div class="row justify-content-center g-3 mb-4">
-            {% for entry in top_players %}
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="player-rank-card {% if entry.rank == 1 %}rank-gold{% elif entry.rank == 2 %}rank-silver{% elif entry.rank == 3 %}rank-bronze{% endif %}">
-                    <div class="rank-number orbitron">
-                        {% if entry.rank == 1 %}🥇
-                        {% elif entry.rank == 2 %}🥈
-                        {% elif entry.rank == 3 %}🥉
-                        {% else %}#{{ entry.rank }}{% endif %}
-                    </div>
-                    <div class="rank-ign rajdhani">{{ entry.player.ign }}</div>
-                    <div class="rank-pts text-cyan small">{{ entry.rank_points }} pts</div>
-                    <div class="rank-tier small text-secondary">{{ entry.player.tier }}</div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="text-center">
-            <a href="{% url 'leaderboard:leaderboard' %}" class="btn btn-arena-outline">
-                <i class="bi bi-trophy-fill me-2"></i>Full Leaderboard
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ══════════ HOW IT WORKS ══════════ -->
-<section class="section-dark py-5">
-    <div class="container-xl">
-        <div class="section-header text-center mb-5">
-            <div class="section-badge">📋 GUIDE</div>
-            <h2 class="section-title orbitron">How to <span class="text-cyan">Compete</span></h2>
-            <div class="section-line"></div>
-        </div>
-
-        <div class="row g-4 justify-content-center">
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card">
-                    <div class="step-number orbitron">01</div>
-                    <div class="step-icon">🎓</div>
-                    <h5 class="step-title rajdhani">Register Account</h5>
-                    <p class="text-secondary small">Sign up with your NSRIT roll number and college email</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card">
-                    <div class="step-number orbitron">02</div>
-                    <div class="step-icon">🎮</div>
-                    <h5 class="step-title rajdhani">Create Profile</h5>
-                    <p class="text-secondary small">Set up your player profile with IGN and Game ID</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card">
-                    <div class="step-number orbitron">03</div>
-                    <div class="step-icon">⚔️</div>
-                    <h5 class="step-title rajdhani">Register & Pay</h5>
-                    <p class="text-secondary small">Register for tournaments and pay entry fee via Razorpay</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card">
-                    <div class="step-number orbitron">04</div>
-                    <div class="step-icon">🏆</div>
-                    <h5 class="step-title rajdhani">Compete & Win</h5>
-                    <p class="text-secondary small">Battle in matches, climb the bracket, claim prizes!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ══════════ CTA BANNER ══════════ -->
-<section class="cta-banner py-5">
-    <div class="container-xl text-center">
-        <h2 class="orbitron mb-3">Ready to <span class="text-red">Dominate</span>?</h2>
-        <p class="text-secondary mb-4">Join NSRIT eSports Arena today and prove your skills on the campus battlefield!</p>
-        {% if not user.is_authenticated %}
-        <a href="{% url 'accounts:register' %}" class="btn btn-arena-primary btn-lg">
-            <i class="bi bi-controller me-2"></i>Create Your Arena Account
-        </a>
-        {% else %}
-        <a href="{% url 'tournaments:list' %}" class="btn btn-arena-primary btn-lg">
-            <i class="bi bi-trophy-fill me-2"></i>Find Your Tournament
-        </a>
-        {% endif %}
-    </div>
-</section>
-
+<section class="ve-tournaments"><div class="container-xl">
+  <div class="ve-section-head ve-head-inline"><div><span class="ve-kicker">GET IN THE GAME</span><h2>FEATURED <em>TOURNAMENTS</em></h2><p>Browse live opportunities. Event details shown here come from the platform.</p></div><a href="{% url 'tournaments:list' %}" class="ve-view-all">All tournaments <i class="bi bi-arrow-right"></i></a></div>
+  {% if featured_tournaments %}<div class="row g-3">{% for tournament in featured_tournaments %}<div class="col-md-6 col-xl-4"><article class="ve-tournament-card"><div class="ve-tournament-top"><span class="ve-game-icon">{% if tournament.game == 'FREE_FIRE' %}<i class="bi bi-fire"></i>{% elif tournament.game == 'BGMI' %}<i class="bi bi-crosshair"></i>{% elif tournament.game == 'VALORANT' %}<i class="bi bi-bullseye"></i>{% else %}<i class="bi bi-controller"></i>{% endif %}</span><span class="ve-status">{{ tournament.get_status_display }}</span></div><div class="ve-game-label">{{ tournament.game }} · {{ tournament.mode }}</div><h3>{{ tournament.title }}</h3><p>{{ tournament.description|truncatechars:110 }}</p><div class="ve-tournament-meta"><div><small>PRIZE POOL</small><strong>₹{{ tournament.prize_pool }}</strong></div><div><small>ENTRY</small><strong>{% if tournament.entry_fee == 0 %}FREE{% else %}₹{{ tournament.entry_fee }}{% endif %}</strong></div><div><small>SLOTS LEFT</small><strong>{{ tournament.slots_remaining }}</strong></div></div><a class="btn btn-arena-primary w-100 mt-3" href="{{ tournament.get_absolute_url }}">View tournament <i class="bi bi-arrow-right ms-2"></i></a></article></div>{% endfor %}</div>{% else %}<div class="ve-empty"><i class="bi bi-trophy"></i><h3>New competitions are on the way</h3><p>We're building the community first. Check the tournament page for current listings and updates.</p><a href="{% url 'tournaments:list' %}" class="btn btn-arena-outline">Browse tournaments</a></div>{% endif %}
+</div></section>
+<section class="ve-section container-xl"><div class="ve-section-head ve-head-inline"><div><span class="ve-kicker">THE PLAYERS BEHIND THE GAME</span><h2>COMMUNITY <em>LEADERBOARD</em></h2><p>Recognising competitive players as the community grows.</p></div><a href="{% url 'leaderboard:leaderboard' %}" class="ve-view-all">Full leaderboard <i class="bi bi-arrow-right"></i></a></div>
+{% if top_players %}<div class="ve-rank-list">{% for entry in top_players %}<div class="ve-rank-row"><span class="ve-rank-number">{% if entry.rank == 1 %}01{% elif entry.rank == 2 %}02{% elif entry.rank == 3 %}03{% else %}{{ entry.rank|stringformat:'02d' }}{% endif %}</span><div class="ve-rank-avatar"><i class="bi bi-person-fill"></i></div><div class="ve-rank-name"><strong>{{ entry.player.ign }}</strong><small>{{ entry.player.tier }}</small></div><div class="ve-rank-points"><strong>{{ entry.rank_points }}</strong><small>POINTS</small></div></div>{% endfor %}</div>{% else %}<div class="ve-empty ve-empty-compact"><i class="bi bi-bar-chart-line"></i><p>Player rankings will appear here when leaderboard data is available.</p><a href="{% url 'leaderboard:leaderboard' %}" class="ve-view-all">Open leaderboard <i class="bi bi-arrow-right"></i></a></div>{% endif %}</section>
+<section class="ve-join"><div class="container-xl ve-join-inner"><div><span class="ve-kicker">VIZAG, ASSEMBLE</span><h2>YOUR SQUAD IS <em>OUT THERE.</em></h2><p>Join an independent community built around fair competition, local talent and shared love for gaming.</p></div><div class="ve-join-actions">{% if user.is_authenticated %}<a href="{% url 'teams:list' %}" class="btn btn-arena-primary btn-lg">Explore teams <i class="bi bi-arrow-right ms-2"></i></a>{% else %}<a href="{% url 'accounts:register' %}" class="btn btn-arena-primary btn-lg">Create your account <i class="bi bi-arrow-right ms-2"></i></a><a href="{% url 'accounts:login' %}" class="ve-login-link">Already registered? Log in</a>{% endif %}</div></div></section>
 {% endblock %}
