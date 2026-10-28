@@ -48,7 +48,7 @@ def initiate_payment(request, slug):
     client = get_razorpay_client()
     amount_paise = tournament.entry_fee * 100  # Convert to paise
 
-    receipt = f"nsrit_esports_{player.user.roll_number or player.user.id}_{tournament.id}"
+    receipt = f"vizag_esportz_{player.id}_{tournament.id}"
 
     try:
         order_data = {
@@ -59,7 +59,6 @@ def initiate_payment(request, slug):
                 'player_id': str(player.id),
                 'tournament_id': str(tournament.id),
                 'ign': player.ign,
-                'roll_number': player.user.roll_number or 'N/A',
             }
         }
         razorpay_order = client.order.create(data=order_data)

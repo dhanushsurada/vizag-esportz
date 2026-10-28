@@ -8,7 +8,7 @@ from .models import LeaderboardEntry, TeamLeaderboard
 class LeaderboardEntryAdmin(admin.ModelAdmin):
     list_display = ['rank_display', 'player', 'category', 'rank_points', 'total_wins', 'total_matches', 'win_rate', 'season']
     list_filter = ['category', 'season']
-    search_fields = ['player__ign', 'player__user__roll_number']
+    search_fields = ['player__ign', 'player__user__email']
     ordering = ['rank']
     list_editable = ['rank_points', 'total_wins', 'total_matches']
 

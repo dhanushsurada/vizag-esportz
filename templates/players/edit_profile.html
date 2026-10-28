@@ -17,7 +17,7 @@
             <div class="col-lg-7">
                 <div class="arena-form-card">
                     <h4 class="rajdhani text-center mb-1"><span class="text-red">🎮</span> Update Player Profile</h4>
-                    <p class="text-secondary text-center small mb-4">{{ request.user.roll_number }} · {{ request.user.get_branch_display }}</p>
+                    <p class="text-secondary text-center small mb-4">{{ request.user.email }}</p>
 
                     <form method="post" novalidate>
                         {% csrf_token %}

@@ -32,7 +32,7 @@
                 <div class="player-rank-card rank-silver text-center" style="margin-top:30px;">
                     <div style="font-size:2rem;">🥈</div>
                     <div class="rank-ign rajdhani mt-1">{{ top3.1.player.ign }}</div>
-                    <div class="text-secondary small">{{ top3.1.player.user.roll_number }}</div>
+                    
                     <div class="text-silver fw-bold orbitron">{{ top3.1.rank_points }} pts</div>
                     <div class="text-secondary small">W: {{ top3.1.total_wins }} | M: {{ top3.1.total_matches }}</div>
                     <div class="player-tier-badge mt-2">{{ top3.1.player.tier }}</div>
@@ -46,7 +46,7 @@
                 <div class="player-rank-card rank-gold text-center" style="border: 2px solid var(--gold);">
                     <div style="font-size:2.5rem;">🥇</div>
                     <div class="rank-ign rajdhani mt-1" style="font-size:1.2rem;">{{ top3.0.player.ign }}</div>
-                    <div class="text-secondary small">{{ top3.0.player.user.roll_number }}</div>
+                    
                     <div class="text-gold fw-bold orbitron" style="font-size:1.3rem;">{{ top3.0.rank_points }} pts</div>
                     <div class="text-secondary small">W: {{ top3.0.total_wins }} | M: {{ top3.0.total_matches }}</div>
                     <div class="player-tier-badge mt-2" style="background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:var(--gold);">
@@ -63,7 +63,7 @@
                 <div class="player-rank-card rank-bronze text-center" style="margin-top:30px;">
                     <div style="font-size:2rem;">🥉</div>
                     <div class="rank-ign rajdhani mt-1">{{ top3.2.player.ign }}</div>
-                    <div class="text-secondary small">{{ top3.2.player.user.roll_number }}</div>
+                    
                     <div class="text-bronze fw-bold orbitron">{{ top3.2.rank_points }} pts</div>
                     <div class="text-secondary small">W: {{ top3.2.total_wins }} | M: {{ top3.2.total_matches }}</div>
                     <div class="player-tier-badge mt-2">{{ top3.2.player.tier }}</div>
@@ -85,7 +85,6 @@
                             <th style="width:60px;">Rank</th>
                             <th>Player</th>
                             <th>Roll No.</th>
-                            <th>Branch</th>
                             <th class="text-center">Matches</th>
                             <th class="text-center">Wins</th>
                             <th class="text-center">Win Rate</th>
@@ -113,8 +112,7 @@
                                     <span class="rajdhani fw-bold">{{ entry.player.ign }}</span>
                                 </div>
                             </td>
-                            <td class="text-secondary small">{{ entry.player.user.roll_number }}</td>
-                            <td><span class="mini-tag">{{ entry.player.user.branch }}</span></td>
+                            <td class="text-secondary small">{{ entry.player.user.email }}</td>
                             <td class="text-center">{{ entry.total_matches }}</td>
                             <td class="text-center text-green fw-bold">{{ entry.total_wins }}</td>
                             <td class="text-center text-cyan fw-bold">{{ entry.win_rate }}%</td>

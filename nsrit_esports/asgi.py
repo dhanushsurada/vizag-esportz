@@ -1,5 +1,5 @@
 """
-ASGI config for NSRIT eSports Arena
+ASGI config for Vizag Esportz
 """
 import os
 from django.core.asgi import get_asgi_application

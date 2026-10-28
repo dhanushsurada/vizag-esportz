@@ -1,5 +1,5 @@
 """
-NSRIT eSports Arena - Security Middleware
+Vizag Esportz - Security Middleware
 
 1. AdminSecurityMiddleware
    - Blocks non-staff users from accessing the admin URL entirely
@@ -74,10 +74,10 @@ class AdminSecurityMiddleware(MiddlewareMixin):
         is_superuser = is_authenticated and user.is_superuser
 
         if not is_staff:
-            # Unauthenticated or regular student → 404 (hide admin existence)
+            # Unauthenticated or regular user → 404 (hide admin existence)
             logger.warning(
                 f"Unauthorised admin access attempt: "
-                f"user={'anon' if not is_authenticated else (user.roll_number or user.email)} "
+                f"user={'anon' if not is_authenticated else (user.email)} "
                 f"path={request.path} ip={client_ip}"
             )
             self._log_attempt(request, 'DENIED', client_ip, 'Not staff/superuser')

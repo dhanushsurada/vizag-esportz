@@ -88,7 +88,7 @@ class RegistrationAdmin(admin.ModelAdmin):
     list_filter  = ['status', 'payment_method', 'payment_status', 'tournament__game']
     search_fields = [
         'player__ign', 'player__user__email',
-        'player__user__roll_number', 'tournament__title', 'transaction_id'
+        'player__ign', 'player__user__email', 'tournament__title', 'transaction_id'
     ]
     ordering = ['-registered_at']
     list_editable = ['status']

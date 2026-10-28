@@ -1,5 +1,5 @@
 """
-NSRIT eSports Arena - Django Settings
+Vizag Esportz - Django Settings
 Production-ready configuration with email, security hardening, and custom admin URL.
 """
 
@@ -9,7 +9,7 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='nsrit-esports-secret-key-change-in-production-2024')
+SECRET_KEY = config('SECRET_KEY', default='vizag-esportz-dev-secret-key-change-in-production')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # ── NSRIT Security Middleware (after auth so request.user is available) ──
+    # ── Security Middleware (after auth so request.user is available) ──
     'accounts.middleware.AdminSecurityMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -148,12 +148,12 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config(
     'DEFAULT_FROM_EMAIL',
-    default='NSRIT eSports Arena <noreply@nsrit.edu.in>'
+    default='Vizag Esportz <noreply@vizagesportz.com>'
 )
 
 # ── Admin Security ────────────────────────────────────────────────────────────
 # Change ADMIN_URL in .env to something secret in production!
-# Example: ADMIN_URL=nsrit-control-panel-x9k2/
+# Example: ADMIN_URL=vizag-control-panel-x9k2/
 ADMIN_URL = config('ADMIN_URL', default='admin/')
 
 # ── Session Security ──────────────────────────────────────────────────────────

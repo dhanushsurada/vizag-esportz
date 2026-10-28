@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Django's command-line utility for NSRIT eSports Arena."""
+"""Django's command-line utility for Vizag Esportz."""
 import os
 import sys
 

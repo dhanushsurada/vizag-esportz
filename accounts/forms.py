@@ -5,7 +5,6 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-# import re  # ── DISABLED: roll number regex validation removed
 
 User = get_user_model()
 
@@ -34,9 +33,8 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'branch', 'year', 'phone']  # ── roll_number removed
+        fields = ['first_name', 'last_name', 'email', 'phone']
         widgets = {
-            # ── roll_number widget removed (field no longer in registration form)
             'first_name': forms.TextInput(attrs={
                 'class': 'form-control cyber-input',
                 'placeholder': 'First Name',
@@ -49,29 +47,14 @@ class RegistrationForm(forms.ModelForm):
                 'class': 'form-control cyber-input',
                 'placeholder': 'your@email.com',  # ── any email accepted
             }),
-            'branch': forms.Select(attrs={'class': 'form-select cyber-select'}),
-            'year': forms.Select(attrs={'class': 'form-select cyber-select'}),
             'phone': forms.TextInput(attrs={
                 'class': 'form-control cyber-input',
                 'placeholder': '10-digit mobile number',
             }),
         }
 
-    # ── DISABLED: roll number validation removed for open registration
-    # def clean_roll_number(self):
-    #     roll = self.cleaned_data['roll_number'].upper()
-    #     pattern = r'^\d{2}[A-Z]{2}\d[A-Z]\d{4}$'
-    #     if not re.match(pattern, roll):
-    #         raise forms.ValidationError('Invalid roll number. Format: 25NU1A4401')
-    #     if User.objects.filter(roll_number=roll).exists():
-    #         raise forms.ValidationError('This roll number is already registered.')
-    #     return roll
-
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
-        # ── DISABLED: @nsrit.edu.in restriction removed for open registration
-        # if not email.endswith('@nsrit.edu.in'):
-        #     raise forms.ValidationError('Please use your NSRIT email address (@nsrit.edu.in)')
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('This email is already registered.')
         return email
@@ -85,13 +68,9 @@ class RegistrationForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        import uuid
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password'])
-        user.email_verified = True  # ── auto-verified (email auth disabled for launch)
-        # ── Auto-generate a unique roll_number placeholder since field is now optional
-        if not user.roll_number:
-            user.roll_number = f"USR-{str(uuid.uuid4())[:12].upper()}"
+        user.email_verified = True  # auto-verified (email confirmation disabled for launch)
         if commit:
             user.save()
         return user
@@ -101,7 +80,7 @@ class RegistrationForm(forms.ModelForm):
 # LOGIN
 # ──────────────────────────────────────────────────────────────────────────────
 
-class NSRITLoginForm(AuthenticationForm):
+class EsportzLoginForm(AuthenticationForm):
     # ── UPDATED: login by email instead of roll number
     username = forms.CharField(
         label='Email',
@@ -140,8 +119,8 @@ class ProfileUpdateForm(forms.ModelForm):
 # ──────────────────────────────────────────────────────────────────────────────
 
 class PasswordResetRequestForm(forms.Form):
-    roll_number_or_email = forms.CharField(
-        label='Roll Number or Email',
+    email = forms.EmailField(
+        label='Email',
         max_length=100,
         widget=forms.TextInput(attrs={
             'class': 'form-control cyber-input',
@@ -151,14 +130,13 @@ class PasswordResetRequestForm(forms.Form):
         help_text='Enter the email address you registered with.'
     )
 
-    def clean_roll_number_or_email(self):
-        value = self.cleaned_data['roll_number_or_email'].strip()
+    def clean_email(self):
+        value = self.cleaned_data['email'].lower().strip()
         # Try to find the user (but don't reveal if they exist — anti-enumeration)
         return value
 
     def get_user(self):
-        # ── UPDATED: lookup by email only (roll_number removed)
-        value = self.cleaned_data.get('roll_number_or_email', '').strip()
+        value = self.cleaned_data.get('email', '').strip()
         User = get_user_model()
         return User.objects.filter(email__iexact=value, is_active=True).first()
 
@@ -212,7 +190,4 @@ class ResendVerificationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower().strip()
-        # ── DISABLED: @nsrit.edu.in restriction removed
-        # if not email.endswith('@nsrit.edu.in'):
-        #     raise forms.ValidationError('Must be a valid @nsrit.edu.in address.')
         return email

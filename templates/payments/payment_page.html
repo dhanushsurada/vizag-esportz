@@ -81,7 +81,7 @@ RAZORPAY DISABLED#}
                     <div class="dashboard-hud text-center mb-4 p-3">
                         <div class="text-secondary small mb-1">Pay to this UPI ID</div>
                         <div class="orbitron fw-bold text-cyan" style="font-size:1.2rem;" id="upi-id-display">
-                            {{ upi_id|default:"nsritesports@upi" }}
+                            {{ upi_id|default:"vizagesportz@upi" }}
                         </div>
                         <button onclick="copyUPI()" class="btn btn-arena-ghost btn-sm mt-2">
                             <i class="bi bi-clipboard me-1"></i>Copy UPI ID
@@ -105,7 +105,7 @@ RAZORPAY DISABLED#}
                         <div class="text-center mb-4 p-3" style="background:rgba(255,255,255,0.05);border-radius:8px;border:1px solid rgba(0,245,255,0.2);">
                             <div class="text-secondary small mb-2">Scan QR to Pay ₹{{ amount_inr }}</div>
                             <!-- UPI QR via Google Charts API -->
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa={{ upi_id|default:'nsritesports@upi' }}&pn=Vizag+Esportz&am={{ amount_inr }}&cu=INR&tn=Tournament+{{ tournament.id }}"
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa={{ upi_id|default:'vizagesportz@upi' }}&pn=Vizag+Esportz&am={{ amount_inr }}&cu=INR&tn=Tournament+{{ tournament.id }}"
                                  alt="UPI QR Code"
                                  style="border-radius:8px;border:3px solid #00F5FF;width:180px;height:180px;"
                                  onerror="this.style.display='none';document.getElementById('qr-fallback').style.display='block'">

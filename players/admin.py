@@ -5,19 +5,11 @@ from .models import Player
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ['ign', 'get_roll_number', 'get_branch', 'primary_game', 'tier', 'rank_points', 'total_wins', 'total_matches']
-    list_filter = ['primary_game', 'tier', 'user__branch', 'user__year', 'is_available']
-    search_fields = ['ign', 'game_id', 'user__roll_number', 'user__first_name']
+    list_display = ['ign', 'primary_game', 'tier', 'rank_points', 'total_wins', 'total_matches']
+    list_filter = ['primary_game', 'tier', 'is_available']
+    search_fields = ['ign', 'game_id', 'user__first_name', 'user__email']
     ordering = ['-rank_points']
     readonly_fields = ['kd_ratio', 'win_rate', 'created_at', 'updated_at']
-
-    def get_roll_number(self, obj):
-        return obj.user.roll_number or "—"
-    get_roll_number.short_description = 'Roll Number'
-
-    def get_branch(self, obj):
-        return obj.user.branch
-    get_branch.short_description = 'Branch'
 
     actions = ['award_rank_points']
 

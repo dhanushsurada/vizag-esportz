@@ -182,7 +182,7 @@
                         </div>
                         <div>
                             <div class="player-ign">{{ player.ign }}</div>
-                            <div class="text-secondary small">{{ request.user.roll_number }}</div>
+                            <div class="text-secondary small">{{ request.user.email }}</div>
                             <div class="player-tier-badge mt-1">{{ player.tier }}</div>
                         </div>
                     </div>
@@ -193,12 +193,6 @@
                                 <div class="rajdhani fw-bold small">{{ player.primary_game }}</div>
                             </div>
                             <div class="col-4">
-                                <div class="text-secondary" style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;">Branch</div>
-                                <div class="rajdhani fw-bold small">{{ request.user.branch }}</div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-secondary" style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;">Year</div>
-                                <div class="rajdhani fw-bold small">{{ request.user.year }}st/nd</div>
                             </div>
                         </div>
                         {% if player.bio %}

@@ -169,21 +169,16 @@ def players(request):
     all_players = Player.objects.select_related('user').order_by('-rank_points')
 
     search = request.GET.get('search', '')
-    branch = request.GET.get('branch', '')
     if search:
         all_players = all_players.filter(
             Q(ign__icontains=search) |
             Q(user__first_name__icontains=search) |
             Q(user__email__icontains=search)
         )
-    if branch:
-        all_players = all_players.filter(user__branch=branch)
 
     context = {
         'players': all_players,
         'search': search,
-        'branch': branch,
-        'branch_choices': NSRITUser.BRANCH_CHOICES,
     }
     return render(request, 'moderator/players.html', context)
 

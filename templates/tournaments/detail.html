@@ -168,8 +168,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>IGN</th>
-                                    <th>Roll</th>
-                                    <th>Branch</th>
                                     <th>Status</th>
                                     {% if user.is_staff %}
                                     <th>Actions</th>
@@ -182,8 +180,6 @@
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ reg.player.ign }}</td>
-                                    <td>{{ reg.player.user.roll_number }}</td>
-                                    <td>{{ reg.player.user.branch }}</td>
 
                                     <td>
                                         <span class="status-badge status-{{ reg.status|lower }}">

@@ -1,0 +1,42 @@
+ .env.example                            |   7 [32m+[m[31m-[m
+ TEST_REPORT.md                          |  92 [32m++++[m
+ ...ranch_alter_nsrituser_roll_number.py |  23 [32m+[m
+ accounts/utils.py                       |  12 [32m+[m[31m-[m
+ h origin mai                            | 335 [32m+++++++++++++[m
+ h origin main                           | 335 [32m+++++++++++++[m
+ .../0003_alter_timeslot_label.py        |  18 [32m+[m
+ nsrit_esports/settings.py               |   2 [32m+[m[31m-[m
+ requirements.txt                        |   1 [32m+[m
+ ...003_alter_teamjoinrequest_options.py |  17 [32m+[m
+ .../email_verification_sent.html        |   6 [32m+[m[31m-[m
+ .../emails/password_reset_email.html    |  12 [32m+[m[31m-[m
+ .../emails/verification_email.html      |  12 [32m+[m[31m-[m
+ templates/accounts/login.html           |   4 [32m+[m[31m-[m
+ .../password_reset_confirm.html         |   2 [32m+[m[31m-[m
+ .../accounts/password_reset_done.html   |   2 [32m+[m[31m-[m
+ .../password_reset_request.html         |   6 [32m+[m[31m-[m
+ .../accounts/password_reset_sent.html   |   2 [32m+[m[31m-[m
+ templates/accounts/profile_update.html  |   2 [32m+[m[31m-[m
+ templates/accounts/register.html        |   4 [32m+[m[31m-[m
+ .../accounts/resend_verification.html   |   6 [32m+[m[31m-[m
+ .../accounts/verify_email_result.html   |   4 [32m+[m[31m-[m
+ templates/leaderboard/leaderboard.html  |   2 [32m+[m[31m-[m
+ templates/matches/bracket.html          |   2 [32m+[m[31m-[m
+ templates/matches/update_result.html    |   2 [32m+[m[31m-[m
+ templates/moderator/dashboard.html      |   2 [32m+[m[31m-[m
+ templates/payments/history.html         |   2 [32m+[m[31m-[m
+ templates/payments/payment_page.html    |   4 [32m+[m[31m-[m
+ templates/players/create_profile.html   |   2 [32m+[m[31m-[m
+ templates/players/dashboard.html        |   2 [32m+[m[31m-[m
+ templates/players/edit_profile.html     |   2 [32m+[m[31m-[m
+ templates/players/player_list.html      |   4 [32m+[m[31m-[m
+ templates/players/profile.html          |   2 [32m+[m[31m-[m
+ templates/teams/create_team.html        |   2 [32m+[m[31m-[m
+ templates/teams/detail.html             |   2 [32m+[m[31m-[m
+ templates/teams/list.html               |   4 [32m+[m[31m-[m
+ templates/tournaments/detail.html       |   8 [32m+[m[31m-[m
+ templates/tournaments/list.html         |   2 [32m+[m[31m-[m
+ .../tournaments/my_registrations.html   |   2 [32m+[m[31m-[m
+ .../0003_registration_notes.py          |   7 [32m+[m[31m-[m
+ ...alter_tournament_options_and_more.py |  77 [32m+++[m
+ 41 files changed, 968 insertions(+), 66 deletions(-)

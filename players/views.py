@@ -90,12 +90,10 @@ def dashboard(request):
 
 
 @login_required
-def player_profile(request, roll_number=None):
+def player_profile(request, player_id=None):
     """View a player's public profile."""
-    User = get_user_model()
-    if roll_number:
-        user = get_object_or_404(User, roll_number=roll_number)
-        player = get_object_or_404(Player, user=user)
+    if player_id:
+        player = get_object_or_404(Player, id=player_id)
     else:
         player = get_object_or_404(Player, user=request.user)
 
@@ -124,29 +122,22 @@ def player_list(request):
     players = Player.objects.select_related('user').all()
 
     # Filters
-    branch = request.GET.get('branch', '')
-    year = request.GET.get('year', '')
     game = request.GET.get('game', '')
     search = request.GET.get('search', '')
 
-    if branch:
-        players = players.filter(user__branch=branch)
-    if year:
-        players = players.filter(user__year=year)
     if game:
         players = players.filter(primary_game=game)
     if search:
         players = players.filter(
             Q(ign__icontains=search) |
             Q(user__first_name__icontains=search) |
-            Q(user__roll_number__icontains=search)
+            Q(user__last_name__icontains=search) |
+            Q(user__email__icontains=search)
         )
 
     context = {
         'players': players,
-        'branch_choices': [('CSE', 'CSE'), ('ECE', 'ECE'), ('EEE', 'EEE'), ('MECH', 'MECH'), ('CIVIL', 'CIVIL'), ('IT', 'IT'), ('AIDS', 'AI&DS'), ('CSBS', 'CSBS')],
-        'year_choices': [(1, '1st'), (2, '2nd'), (3, '3rd'), (4, '4th')],
         'game_choices': Player.GAME_CHOICES,
-        'filters': {'branch': branch, 'year': year, 'game': game, 'search': search},
+        'filters': {'game': game, 'search': search},
     }
     return render(request, 'players/player_list.html', context)

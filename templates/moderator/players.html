@@ -12,30 +12,25 @@
       <a href="{% url 'moderator:dashboard' %}" class="btn btn-arena-ghost btn-sm">← Back</a>
       <form method="get" class="d-flex gap-2">
         <input type="text" name="search" value="{{ search }}" placeholder="Search IGN / email" class="form-control cyber-input" style="max-width:200px">
-        <select name="branch" class="form-select cyber-select" style="max-width:150px">
-          <option value="">All Branches</option>
-          {% for val, label in branch_choices %}<option value="{{ val }}" {% if branch == val %}selected{% endif %}>{{ val }}</option>{% endfor %}
-        </select>
         <button type="submit" class="btn btn-arena-primary btn-sm">Filter</button>
       </form>
     </div>
     <div class="dashboard-hud">
       <div class="table-responsive">
         <table class="table arena-table">
-          <thead><tr><th>IGN</th><th>Name</th><th>Email</th><th>Branch</th><th>Game</th><th>Tier</th><th>Rank Pts</th></tr></thead>
+          <thead><tr><th>IGN</th><th>Name</th><th>Email</th><th>Game</th><th>Tier</th><th>Rank Pts</th></tr></thead>
           <tbody>
             {% for player in players %}
             <tr>
               <td>{{ player.ign }}</td>
               <td>{{ player.user.get_full_name }}</td>
               <td class="text-secondary small">{{ player.user.email }}</td>
-              <td>{{ player.user.branch }}</td>
               <td>{{ player.get_primary_game_display }}</td>
               <td>{{ player.tier }}</td>
               <td>{{ player.rank_points }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="7" class="text-center text-secondary py-4">No players found.</td></tr>
+            <tr><td colspan="6" class="text-center text-secondary py-4">No players found.</td></tr>
             {% endfor %}
           </tbody>
         </table>

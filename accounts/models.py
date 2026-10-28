@@ -1,12 +1,11 @@
 """
-Accounts App - Custom User Model for NSRIT Students
+Accounts App - Custom User Model for Vizag Esportz players
 Includes: Email Verification Tokens, Password Reset Tokens
 """
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
 from django.conf import settings
-# import re  # ── DISABLED: roll number format validation removed
 import uuid
 from datetime import timedelta
 
@@ -14,7 +13,7 @@ from datetime import timedelta
 class NSRITUserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
-        # ── UPDATED: email is now the primary identifier (roll_number optional)
+        # Email is the primary identifier
         if not email:
             raise ValueError('Email is required')
         email = self.normalize_email(email)
@@ -24,7 +23,7 @@ class NSRITUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        # ── UPDATED: superuser created by email only
+        # Superuser created by email only
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -34,33 +33,12 @@ class NSRITUserManager(BaseUserManager):
 
 class NSRITUser(AbstractBaseUser, PermissionsMixin):
     """
-    Custom user model for NSRIT students.
-    Uses roll_number as primary identifier.
+    Custom user model for Vizag Esportz community players.
+    Uses email as the primary identifier.
     """
-    BRANCH_CHOICES = [
-        ('CSE', 'Computer Science & Engineering'),
-        ('ECE', 'Electronics & Communication Engineering'),
-        ('EEE', 'Electrical & Electronics Engineering'),
-        ('MECH', 'Mechanical Engineering'),
-        ('CIVIL', 'Civil Engineering'),
-        ('CSD', 'COMPUTER SCIENCE AND DATA SCIENCE'),
-        ('CSM', 'COMPUTER SCIENCE AND MACHINE LEARNING'),
-        ('CSBS', 'Computer Science & Business Systems'),
-    ]
-
-    YEAR_CHOICES = [
-        (1, '1st Year'),
-        (2, '2nd Year'),
-        (3, '3rd Year'),
-        (4, '4th Year'),
-    ]
-
-    roll_number = models.CharField(max_length=20, unique=True, blank=True, null=True)  # ── OPTIONAL: not required for open registration
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    branch = models.CharField(max_length=10, choices=BRANCH_CHOICES, default='CSE')
-    year = models.IntegerField(choices=YEAR_CHOICES, default=1)
     phone = models.CharField(max_length=15, blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
 
@@ -77,17 +55,16 @@ class NSRITUser(AbstractBaseUser, PermissionsMixin):
 
     objects = NSRITUserManager()
 
-    USERNAME_FIELD = 'email'  # ── UPDATED: login by email instead of roll number
-    REQUIRED_FIELDS = ['first_name', 'last_name']  # ── roll_number removed from required
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     class Meta:
-        verbose_name = 'NSRIT Student'
-        verbose_name_plural = 'NSRIT Students'
+        verbose_name = 'Player Account'
+        verbose_name_plural = 'Player Accounts'
         db_table = 'users'
 
     def __str__(self):
-        identifier = self.roll_number or self.email
-        return f"{self.first_name} {self.last_name} ({identifier})"
+        return f"{self.first_name} {self.last_name} ({self.email})"
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
@@ -120,18 +97,7 @@ class NSRITUser(AbstractBaseUser, PermissionsMixin):
             self.account_locked_until = None
             self.save(update_fields=['failed_login_attempts', 'account_locked_until'])
 
-    # ── DISABLED: roll number format validation removed for open registration
-    # def clean(self):
-    #     super().clean()
-    #     roll_pattern = r'^\d{2}[A-Z]{2}\d[A-Z]\d{4}$'
-    #     if not re.match(roll_pattern, self.roll_number.upper()):
-    #         from django.core.exceptions import ValidationError
-    #         raise ValidationError({'roll_number': 'Invalid roll number format. Example: 25NU1A4401'})
-
     def save(self, *args, **kwargs):
-        # ── UPDATED: only uppercase roll_number if provided
-        if self.roll_number:
-            self.roll_number = self.roll_number.upper()
         super().save(*args, **kwargs)
 
 
@@ -145,7 +111,7 @@ def email_token_expiry():
 
 class EmailVerificationToken(models.Model):
     """
-    One-time token sent to the student's @nsrit.edu.in email to verify ownership.
+    One-time token sent to the user's email to verify ownership.
     Token is UUID-based, expires in 24 hours, and is invalidated after use.
     """
     user = models.ForeignKey(
@@ -163,8 +129,7 @@ class EmailVerificationToken(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        identifier = self.user.roll_number or self.user.email
-        return f"EmailVerify({identifier}) — {'used' if self.is_used else 'pending'}"
+        return f"EmailVerify({self.user.email}) — {'used' if self.is_used else 'pending'}"
 
     @property
     def is_expired(self):
@@ -208,8 +173,7 @@ class PasswordResetToken(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        identifier = self.user.roll_number or self.user.email
-        return f"PasswordReset({identifier}) — {'used' if self.is_used else 'pending'}"
+        return f"PasswordReset({self.user.email}) — {'used' if self.is_used else 'pending'}"
 
     @property
     def is_expired(self):
@@ -256,5 +220,5 @@ class AdminAccessLog(models.Model):
         ordering = ['-timestamp']
 
     def __str__(self):
-        user_str = (self.user.roll_number or self.user.email) if self.user else 'Anonymous'
+        user_str = self.user.email if self.user else 'Anonymous'
         return f"[{self.action}] {user_str} @ {self.timestamp:%Y-%m-%d %H:%M}"

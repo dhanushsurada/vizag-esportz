@@ -16,7 +16,7 @@ import uuid
 import logging
 
 from .forms import (
-    RegistrationForm, NSRITLoginForm, ProfileUpdateForm,
+    RegistrationForm, EsportzLoginForm, ProfileUpdateForm,
     PasswordResetRequestForm, PasswordResetConfirmForm,
     ResendVerificationForm,
 )
@@ -149,12 +149,12 @@ class LoginView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('players:dashboard')
-        form = NSRITLoginForm()
+        form = EsportzLoginForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        form = NSRITLoginForm(request, data=request.POST)
-        # ── UPDATED: lookup by email (was roll_number)
+        form = EsportzLoginForm(request, data=request.POST)
+        # Lookup by email
         email_input = request.POST.get('username', '').lower().strip()
 
         # Lookup user to check lock status before authenticate()
@@ -189,7 +189,7 @@ class LoginView(View):
 
             user.reset_failed_login()
             login(request, user)
-            logger.info(f"Successful login: {user.roll_number or user.email} from {get_client_ip(request)}")
+            logger.info(f"Successful login: {user.email} from {get_client_ip(request)}")
             messages.success(request, f'Welcome back, {user.first_name}! Ready to battle? ⚔️')
             next_url = request.GET.get('next') or reverse('players:dashboard')
             return redirect(next_url)

@@ -7,7 +7,7 @@ from django.db.models import Sum, Count
 
 
 class Player(models.Model):
-    """Extended player profile linked to NSRIT user account."""
+    """Extended player profile linked to a user account."""
 
     GAME_CHOICES = [
         ('BGMI', 'BGMI (Battlegrounds Mobile India)'),
@@ -81,7 +81,7 @@ class Player(models.Model):
         verbose_name_plural = 'Player Profiles'
 
     def __str__(self):
-        return f"{self.ign} ({self.user.roll_number or self.user.email})"
+        return f"{self.ign} ({self.user.email})"
 
     @property
     def kd_ratio(self):

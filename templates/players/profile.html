@@ -17,7 +17,7 @@
             <div>
                 <h1 class="page-title mb-0">{{ player.ign }}</h1>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="text-secondary small">{{ player.user.roll_number }} · {{ player.user.get_branch_display }}</span>
+                    <span class="text-secondary small">{{ player.user.get_full_name }}</span>
                     <span class="player-tier-badge">{{ player.tier }}</span>
                 </div>
             </div>
@@ -43,16 +43,10 @@
                             <span class="rajdhani fw-600">{{ player.user.get_full_name }}</span>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <span class="text-secondary small">Roll Number</span>
-                            <span class="rajdhani fw-600 text-cyan">{{ player.user.roll_number }}</span>
+                            <span class="text-secondary small">Email</span>
+                            <span class="rajdhani fw-600 text-cyan">{{ player.user.email }}</span>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <span class="text-secondary small">Branch</span>
-                            <span class="rajdhani fw-600">{{ player.user.get_branch_display }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <span class="text-secondary small">Year</span>
-                            <span class="rajdhani fw-600">{{ player.user.get_year_display }}</span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-secondary small">Primary Game</span>

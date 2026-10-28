@@ -1,6 +1,6 @@
 """
 Accounts - Email Utilities
-Sends verification and password reset emails with NSRIT Neo Arena styling.
+Sends verification and password reset emails with Vizag Esportz styling.
 Falls back to console backend in development.
 """
 from django.core.mail import EmailMultiAlternatives
@@ -22,7 +22,7 @@ def get_client_ip(request):
 
 def send_verification_email(request, user, token_obj):
     """
-    Send the email-verification link to the student's @nsrit.edu.in address.
+    Send the email-verification link to the user's email address.
     """
     verify_url = request.build_absolute_uri(
         f'/accounts/verify-email/{token_obj.token}/'

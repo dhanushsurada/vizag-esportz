@@ -6,15 +6,20 @@ User = get_user_model()
 class Command(BaseCommand):
     help = "Create main super admin"
 
-    def handle(self, *args, **kwargs):
-        user, created = User.objects.get_or_create(
-            roll_number='25NU1A4436'
-        )
+    def add_arguments(self, parser):
+        parser.add_argument('--email', type=str, default='admin@vizagesportz.com')
+        parser.add_argument('--password', type=str, default='Admin@1234')
 
-        user.email = '25nu1a4436@nsrit.edu.in'
+    def handle(self, *args, **kwargs):
+        email = kwargs['email'].lower()
+        user, created = User.objects.get_or_create(email=email)
         user.is_staff = True
         user.is_superuser = True
-        user.set_password('Admin@1234')  # change later
+        user.is_active = True
+        user.email_verified = True
+        user.set_password(kwargs['password'])  # change later
         user.save()
 
-        self.stdout.write(self.style.SUCCESS("Super admin ready"))
+        self.stdout.write(self.style.SUCCESS(
+            f'{"Created" if created else "Updated"} super admin: {email}'
+        ))

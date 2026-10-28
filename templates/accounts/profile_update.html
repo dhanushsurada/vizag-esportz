@@ -19,7 +19,7 @@
                     <h4 class="rajdhani text-center mb-1">
                         <span class="text-red">👤</span> Account Details
                     </h4>
-                    <p class="text-secondary text-center small mb-4">{{ request.user.roll_number }} · {{ request.user.email }}</p>
+                    <p class="text-secondary text-center small mb-4">{{ request.user.email }}</p>
 
                     <form method="post" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}

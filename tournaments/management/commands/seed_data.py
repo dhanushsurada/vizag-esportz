@@ -9,10 +9,10 @@ import datetime
 
 
 class Command(BaseCommand):
-    help = 'Seed database with sample data for NSRIT eSports Arena'
+    help = 'Seed database with sample data for Vizag Esportz'
 
     def handle(self, *args, **kwargs):
-        self.stdout.write('🎮 Seeding NSRIT eSports Arena database...')
+        self.stdout.write('🎮 Seeding Vizag Esportz database...')
 
         # Import models
         from accounts.models import NSRITUser
@@ -22,7 +22,7 @@ class Command(BaseCommand):
         # ── CREATE SAMPLE TOURNAMENTS ──
         tournaments_data = [
             {
-                'title': 'NSRIT BGMI Championship Season 1',
+                'title': 'Vizag BGMI Championship Season 1',
                 'game': 'BGMI',
                 'mode': 'SQUAD',
                 'entry_fee': 100,
@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 'first_prize': 3000,
                 'second_prize': 1500,
                 'third_prize': 500,
-                'description': 'The inaugural NSRIT BGMI Championship. 64 squads battle for the grand prize of ₹5000!',
+                'description': 'The inaugural Vizag BGMI Championship. 64 squads battle for the grand prize of ₹5000!',
                 'rules': '1. Fair play rules apply\n2. Team must have 4 members\n3. No hacks or mods\n4. Admin decision is final',
                 'status': 'REGISTRATION_OPEN',
                 'is_featured': True,
@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 'first_prize': 5000,
                 'second_prize': 2000,
                 'third_prize': 1000,
-                'description': 'NSRIT\'s premier Valorant tournament. 5v5 team battle with ₹8000 prize pool!',
+                'description': 'Visakhapatnam\'s premier Valorant tournament. 5v5 team battle with ₹8000 prize pool!',
                 'rules': '1. Standard Valorant tournament rules\n2. No smurfing\n3. 5 players per team minimum',
                 'status': 'REGISTRATION_OPEN',
                 'is_featured': True,
@@ -82,7 +82,7 @@ class Command(BaseCommand):
                 'first_prize': 600,
                 'second_prize': 250,
                 'third_prize': 150,
-                'description': 'FREE entry Free Fire tournament! Open to all NSRIT students.',
+                'description': 'FREE entry Free Fire tournament! Open to all Vizag players.',
                 'rules': '1. Free Fire Squad mode\n2. Maximum 4 members\n3. Registration required',
                 'status': 'REGISTRATION_OPEN',
                 'is_featured': True,
@@ -99,7 +99,7 @@ class Command(BaseCommand):
                 'first_prize': 6000,
                 'second_prize': 2500,
                 'third_prize': 1500,
-                'description': 'Elite Counter-Strike 2 tournament for the best 5v5 teams at NSRIT.',
+                'description': 'Elite Counter-Strike 2 tournament for the best 5v5 teams in Vizag.',
                 'rules': '1. CS2 competitive ruleset\n2. Anti-cheat mandatory\n3. 5 players per team',
                 'status': 'UPCOMING',
                 'is_featured': False,
@@ -138,17 +138,14 @@ class Command(BaseCommand):
         self.stdout.write(f'\n🏆 Created {created_count} tournaments')
 
         # ── CREATE SUPERUSER ──
-        if not NSRITUser.objects.filter(email='admin@nsrit-esports.com').exists():
+        if not NSRITUser.objects.filter(email='admin@vizagesportz.com').exists():
             admin = NSRITUser.objects.create_superuser(
-                roll_number='ADMIN001',
-                email='admin@nsrit.edu.in',
-                password='nsrit@admin2024',
+                email='admin@vizagesportz.com',
+                password='vizag@admin2026',
                 first_name='Arena',
                 last_name='Admin',
-                branch='CSE',
-                year=4,
             )
-            self.stdout.write(f'\n👑 Superuser created: ADMIN001 / nsrit@admin2024')
+            self.stdout.write(f'\n👑 Superuser created: see seeded admin credentials above')
         else:
             self.stdout.write('\n👑 Superuser already exists')
 
@@ -156,5 +153,5 @@ class Command(BaseCommand):
         self.stdout.write('=' * 50)
         self.stdout.write('🌐 Start server: python manage.py runserver')
         self.stdout.write('🔑 Admin panel: http://127.0.0.1:8000/admin/')
-        self.stdout.write('👤 Admin: ADMIN001 / nsrit@admin2024')
+        self.stdout.write('👤 Admin: see seeded admin credentials above')
         self.stdout.write('=' * 50)

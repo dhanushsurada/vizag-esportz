@@ -54,22 +54,6 @@
                                 <small class="text-secondary">Any valid email address</small>
                             </div>
 
-                            <!-- Branch & Year -->
-                            <div class="col-md-6">
-                                <label class="form-label">Branch <span class="required">*</span></label>
-                                {{ form.branch }}
-                                {% if form.branch.errors %}
-                                <div class="invalid-feedback d-block">{{ form.branch.errors|join:", " }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Year <span class="required">*</span></label>
-                                {{ form.year }}
-                                {% if form.year.errors %}
-                                <div class="invalid-feedback d-block">{{ form.year.errors|join:", " }}</div>
-                                {% endif %}
-                            </div>
-
                             <!-- Phone -->
                             <div class="col-12">
                                 <label class="form-label">Phone Number</label>

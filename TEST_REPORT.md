@@ -1,6 +1,6 @@
 # Vizag Esportz — Test & Local Run Report
 
-**Date:** 27 Oct 2026 · **Environment:** Python 3.12, Django 4.2.11, SQLite (dev)
+**Date:** 27–28 Oct 2026 · **Environment:** Python 3.12, Django 4.2.11, SQLite (dev)
 
 ## What was run
 
@@ -70,6 +70,29 @@ city-wide and email-domain-neutral.
 4. **Email verification is intentionally disabled** (users are auto-verified on
    registration for launch) — re-enable before scale if spoofed signups are a concern.
 5. The old `create_admin.py` management command hardcodes `25nu1a4436@nsrit.edu.in`.
+
+## Update (28 Oct 2026): college/student-specific data fully removed
+
+The user model no longer contains any college-specific fields. Removed completely:
+`roll_number`, `branch`, `year` (with a migration `accounts/0005_…` dropping the columns),
+plus every related form field, admin column/filter, template display, filter dropdown and
+URL:
+
+- **Registration form** now asks only: first name, last name, email, phone, password.
+- **Player profiles / dashboard / player list / leaderboard / moderator panel** show IGN,
+  name, email, game, tier, rank — no roll number, branch or year anywhere.
+- **Player profile URLs** changed from roll-number based (`/players/<roll_number>/`) to
+  ID based (`/players/<player_id>/`) — safer now that roll numbers are gone.
+- **Password reset form** field renamed to plain `email`.
+- **Razorpay receipts** use player ID instead of roll number.
+- **Seeded demo data and `create_admin` command** are college-free
+  (`admin@vizagesportz.com`).
+- Internal code clean-up: `NSRITLoginForm` → `EsportzLoginForm`, docstrings, email
+  templates, settings defaults.
+
+Re-verified after removal: fresh DB migrates end-to-end, `manage.py check` passes, models
+and migrations in sync, and both live test suites pass (login/logout/registration/profile/
+tournament registration/payment page/duplicate-registration rejection).
 
 ## Fixed files
 

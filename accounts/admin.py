@@ -14,12 +14,12 @@ from .models import NSRITUser, EmailVerificationToken, PasswordResetToken, Admin
 class NSRITUserAdmin(UserAdmin):
 
     list_display = [
-        'get_identifier', 'get_full_name', 'email', 'branch', 'year',
+        'get_full_name', 'email',
         'role_display', 'email_verified_badge', 'is_verified',
         'account_lock_status', 'date_joined'
     ]
-    list_filter = ['branch', 'year', 'is_verified', 'email_verified', 'is_active', 'is_staff']
-    search_fields = ['roll_number', 'first_name', 'last_name', 'email']
+    list_filter = ['is_verified', 'email_verified', 'is_active', 'is_staff']
+    search_fields = ['first_name', 'last_name', 'email']
     ordering = ['-date_joined']
 
     actions = [
@@ -29,7 +29,7 @@ class NSRITUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal Info', {'fields': ('first_name', 'last_name', 'roll_number', 'branch', 'year', 'phone', 'avatar')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'phone', 'avatar')}),
         ('Verification', {'fields': ('email_verified', 'is_verified')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Login Security', {'fields': ('failed_login_attempts', 'last_failed_login', 'account_locked_until')}),
@@ -48,10 +48,6 @@ class NSRITUserAdmin(UserAdmin):
         if not request.user.is_superuser:
             base += ['is_staff', 'is_superuser', 'groups', 'user_permissions']
         return base
-
-    def get_identifier(self, obj):
-        return obj.roll_number or '—'
-    get_identifier.short_description = 'Roll / ID'
 
     def role_display(self, obj):
         if obj.is_superuser:
@@ -77,12 +73,12 @@ class NSRITUserAdmin(UserAdmin):
 
     def verify_users(self, request, queryset):
         queryset.update(is_verified=True)
-        self.message_user(request, f'{queryset.count()} student(s) admin-verified.')
-    verify_users.short_description = '✅ Admin-verify selected students'
+        self.message_user(request, f'{queryset.count()} user(s) admin-verified.')
+    verify_users.short_description = '✅ Admin-verify selected users'
 
     def unverify_users(self, request, queryset):
         queryset.update(is_verified=False)
-        self.message_user(request, f'{queryset.count()} student(s) unverified.')
+        self.message_user(request, f'{queryset.count()} user(s) unverified.')
     unverify_users.short_description = '❌ Remove admin-verification'
 
     def verify_emails(self, request, queryset):
@@ -149,7 +145,7 @@ class NSRITUserAdmin(UserAdmin):
 class EmailVerificationTokenAdmin(admin.ModelAdmin):
     list_display = ['user', 'token_short', 'created_at', 'expires_at', 'is_used', 'validity_badge']
     list_filter = ['is_used']
-    search_fields = ['user__email', 'user__roll_number']
+    search_fields = ['user__email']
     readonly_fields = ['token', 'created_at']
     ordering = ['-created_at']
 
@@ -170,7 +166,7 @@ class EmailVerificationTokenAdmin(admin.ModelAdmin):
 class PasswordResetTokenAdmin(admin.ModelAdmin):
     list_display = ['user', 'token_short', 'created_at', 'expires_at', 'is_used', 'ip_address', 'validity_badge']
     list_filter = ['is_used']
-    search_fields = ['user__email', 'user__roll_number', 'ip_address']
+    search_fields = ['user__email', 'ip_address']
     readonly_fields = ['token', 'created_at', 'ip_address']
     ordering = ['-created_at']
 
@@ -191,7 +187,7 @@ class PasswordResetTokenAdmin(admin.ModelAdmin):
 class AdminAccessLogAdmin(admin.ModelAdmin):
     list_display = ['timestamp', 'user', 'action_badge', 'ip_address', 'path', 'notes']
     list_filter = ['action']
-    search_fields = ['user__email', 'user__roll_number', 'ip_address', 'path']
+    search_fields = ['user__email', 'ip_address', 'path']
     readonly_fields = ['user', 'action', 'ip_address', 'path', 'timestamp', 'notes']
     ordering = ['-timestamp']
 

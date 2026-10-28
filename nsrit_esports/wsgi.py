@@ -1,5 +1,5 @@
 """
-WSGI config for NSRIT eSports Arena
+WSGI config for Vizag Esportz
 """
 import os
 from django.core.wsgi import get_wsgi_application

@@ -9,7 +9,7 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ['player', 'tournament', 'amount_display', 'status_badge',
                     'razorpay_payment_id', 'created_at']
     list_filter = ['status', 'tournament__game']
-    search_fields = ['player__ign', 'player__user__roll_number',
+    search_fields = ['player__ign',
                      'razorpay_order_id', 'retry_count', 'failure_reason', 'razorpay_payment_id']
     ordering = ['-created_at']
     readonly_fields = ['razorpay_order_id', 'retry_count', 'failure_reason', 'razorpay_payment_id',

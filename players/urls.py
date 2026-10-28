@@ -9,5 +9,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('create-profile/', views.create_profile, name='create_profile'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
-    path('<str:roll_number>/', views.player_profile, name='player_profile'),
+    path('<int:player_id>/', views.player_profile, name='player_profile'),
 ]
