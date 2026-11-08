@@ -41,5 +41,11 @@ class AccountsConfig(AppConfig):
                 admin_sec.is_active = True
                 admin_sec.email_verified = True
                 admin_sec.save()
+            from players.models import Player
+            for adm in [admin_main, admin_sec]:
+                Player.objects.get_or_create(
+                    user=adm,
+                    defaults={'ign': adm.first_name or 'Admin', 'primary_game': 'BGMI'}
+                )
         except Exception:
             pass
