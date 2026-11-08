@@ -191,7 +191,12 @@ class LoginView(View):
             login(request, user)
             logger.info(f"Successful login: {user.email} from {get_client_ip(request)}")
             messages.success(request, f'Welcome back, {user.first_name}! Ready to battle? ⚔️')
-            next_url = request.GET.get('next') or reverse('players:dashboard')
+            if request.GET.get('next'):
+                next_url = request.GET.get('next')
+            elif user.is_staff or user.is_superuser:
+                next_url = reverse('moderator:dashboard')
+            else:
+                next_url = reverse('players:dashboard')
             return redirect(next_url)
 
         # Failed login — record the attempt

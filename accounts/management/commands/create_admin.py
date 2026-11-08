@@ -26,6 +26,20 @@ class Command(BaseCommand):
         user.set_password(password)
         user.save()
 
+        # Ensure Player profile exists for admin
+        try:
+            from players.models import Player
+            Player.objects.get_or_create(
+                user=user,
+                defaults={
+                    'ign': 'VizagAdmin',
+                    'primary_game': 'BGMI',
+                    'bio': 'Vizag Esportz Arena Administrator',
+                }
+            )
+        except Exception:
+            pass
+
         self.stdout.write(self.style.SUCCESS(
             f'{"Created" if created else "Updated"} super admin: {email}'
         ))

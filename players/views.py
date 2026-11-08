@@ -39,6 +39,8 @@ def dashboard(request):
     try:
         player = request.user.player_profile
     except Player.DoesNotExist:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('moderator:dashboard')
         return redirect('players:create_profile')
 
     # My registrations
