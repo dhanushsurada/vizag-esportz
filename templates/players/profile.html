@@ -47,6 +47,8 @@
                             <span class="rajdhani fw-600 text-cyan">{{ player.user.email }}</span>
                         </div>
                         <div class="d-flex justify-content-between">
+                            <span class="text-secondary small">Member Since</span>
+                            <span class="rajdhani fw-600 text-white">{{ player.created_at|date:"M Y" }}</span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-secondary small">Primary Game</span>

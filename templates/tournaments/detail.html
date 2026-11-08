@@ -233,28 +233,91 @@
             <div class="col-lg-4">
 
                 <div class="arena-form-card sticky-top" style="top:80px;">
+                    <h5 class="rajdhani text-center mb-3">
+                        <i class="bi bi-controller text-red me-2"></i>Registration Desk
+                    </h5>
+
+                    <!-- Tournament Status Summary -->
+                    <div class="p-3 mb-3" style="background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Entry Fee</span>
+                            <span class="fw-bold {% if tournament.entry_fee == 0 %}text-green{% else %}text-cyan{% endif %}">
+                                {% if tournament.entry_fee == 0 %}FREE{% else %}₹{{ tournament.entry_fee }}{% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Slots</span>
+                            <span class="fw-bold text-white">{{ tournament.slots_remaining }} available / {{ tournament.max_players }}</span>
+                        </div>
+                        <div class="slot-bar mb-2">
+                            <div class="slot-fill" style="width:{{ tournament.fill_percentage }}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-secondary small">Deadline</span>
+                            <span class="small text-red fw-bold">{{ tournament.registration_deadline|date:"d M Y, H:i" }}</span>
+                        </div>
+                    </div>
 
                     {% if user.is_authenticated %}
-                    {% if user_registration %}
-                    <div class="alert alert-success text-center">
-                        Registered ✅
-                    </div>
-                    {% elif tournament.is_registration_open %}
-                    <form method="post" action="{% url 'tournaments:register' tournament.slug %}">
-                        {% csrf_token %}
-                        <button class="btn btn-arena-primary w-100">
-                            Register Now
-                        </button>
-                    </form>
+                        {% if user_registration %}
+                            {% if user_registration.status == 'CONFIRMED' %}
+                                <div class="alert alert-success text-center mb-3">
+                                    <i class="bi bi-check-circle-fill me-1"></i> Registered & Confirmed ✅
+                                </div>
+                                <p class="text-secondary text-center small mb-3">Your slot is secured! View the bracket and match schedule.</p>
+                                <a href="{% url 'matches:schedule' tournament.slug %}" class="btn btn-arena-outline w-100">
+                                    <i class="bi bi-calendar3 me-1"></i>View Schedule
+                                </a>
+                            {% elif user_registration.status == 'PENDING' %}
+                                <div class="alert alert-warning text-center mb-3" style="background:rgba(255,193,7,0.12);border:1px solid rgba(255,193,7,0.4);color:#ffd700;">
+                                    <i class="bi bi-clock-history me-1"></i> Verification Pending ⏳
+                                </div>
+                                <div class="text-secondary small mb-3">
+                                    {% if user_registration.transaction_id %}
+                                        <div class="mb-1"><span class="text-white">Method:</span> {{ user_registration.payment_method }}</div>
+                                        <div class="mb-1"><span class="text-white">Transaction ID:</span> <code>{{ user_registration.transaction_id }}</code></div>
+                                        <div class="text-warning small mt-2"><i class="bi bi-info-circle me-1"></i>Awaiting moderator verification. You will be confirmed once verified.</div>
+                                    {% else %}
+                                        <div>Payment details not received yet.</div>
+                                    {% endif %}
+                                </div>
+                                {% if tournament.entry_fee > 0 %}
+                                <a href="{% url 'payments:initiate' tournament.slug %}" class="btn btn-arena-primary w-100 mb-2">
+                                    <i class="bi bi-credit-card me-1"></i>Proceed to Payment
+                                </a>
+                                {% endif %}
+                            {% elif user_registration.status == 'CANCELLED' %}
+                                <div class="alert alert-danger text-center mb-3">
+                                    <i class="bi bi-x-circle me-1"></i> Registration Cancelled / Rejected ❌
+                                </div>
+                                {% if tournament.is_registration_open %}
+                                <form method="post" action="{% url 'tournaments:register' tournament.slug %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-arena-primary w-100">
+                                        <i class="bi bi-arrow-repeat me-1"></i>Re-register
+                                    </button>
+                                </form>
+                                {% endif %}
+                            {% endif %}
+                        {% elif tournament.is_registration_open %}
+                            <form method="post" action="{% url 'tournaments:register' tournament.slug %}">
+                                {% csrf_token %}
+                                <button class="btn btn-arena-primary w-100 py-3">
+                                    <i class="bi bi-controller me-2"></i>Register Now
+                                </button>
+                            </form>
+                        {% else %}
+                            <button class="btn btn-secondary w-100 py-3" disabled>
+                                Registration Closed
+                            </button>
+                        {% endif %}
                     {% else %}
-                    <button class="btn btn-secondary w-100" disabled>
-                        Registration Closed
-                    </button>
-                    {% endif %}
-                    {% else %}
-                    <a href="{% url 'accounts:login' %}" class="btn btn-arena-primary w-100">
-                        Login to Register
-                    </a>
+                        <a href="{% url 'accounts:login' %}" class="btn btn-arena-primary w-100 py-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Login to Register
+                        </a>
+                        <div class="text-center mt-2">
+                            <a href="{% url 'accounts:register' %}" class="text-cyan small">Don't have an account? Sign up</a>
+                        </div>
                     {% endif %}
 
                 </div>

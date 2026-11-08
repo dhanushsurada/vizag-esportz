@@ -17,7 +17,7 @@ class Team(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=120, unique=True)
-    tag = models.CharField(max_length=10, help_text='Short team tag e.g. NSR')
+    tag = models.CharField(max_length=10, help_text='Short team tag e.g. VZG')
     game = models.CharField(max_length=20, choices=GAME_CHOICES)
     logo = models.ImageField(upload_to='team_logos/', blank=True, null=True)
     banner = models.ImageField(upload_to='team_banners/', blank=True, null=True)

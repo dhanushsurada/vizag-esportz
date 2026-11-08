@@ -10,6 +10,7 @@ urlpatterns = [
     path('registrations/<int:reg_id>/approve/', views.approve_registration, name='approve_registration'),
     path('registrations/<int:reg_id>/reject/', views.reject_registration, name='reject_registration'),
     path('payments/', views.payments, name='payments'),
+    path('payments/<int:payment_id>/success/', views.mark_payment_success, name='mark_payment_success'),
     path('payments/<int:payment_id>/fail/', views.mark_payment_failed, name='mark_payment_failed'),
     path('players/', views.players, name='players'),
     path('locked-accounts/', views.locked_accounts, name='locked_accounts'),

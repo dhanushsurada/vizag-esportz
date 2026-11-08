@@ -19,29 +19,78 @@
     <div class="dashboard-hud">
       <div class="table-responsive">
         <table class="table arena-table">
-          <thead><tr><th>#</th><th>Player</th><th>Tournament</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
+          <thead><tr><th>#</th><th>Player</th><th>Tournament & Fee</th><th>Payment Info</th><th>Proof</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
           <tbody>
             {% for reg in registrations %}
             <tr>
               <td class="text-secondary small">{{ reg.id }}</td>
-              <td>{{ reg.player.ign }}<br><small class="text-secondary">{{ reg.player.user.email }}</small></td>
-              <td>{{ reg.tournament.title }}</td>
+              <td>
+                <span class="fw-bold text-white">{{ reg.player.ign }}</span><br>
+                <small class="text-secondary">{{ reg.player.user.get_full_name }}</small><br>
+                <small class="text-cyan">{{ reg.player.user.email }}</small>
+              </td>
+              <td>
+                <span class="rajdhani fw-bold text-white">{{ reg.tournament.title }}</span><br>
+                <span class="badge bg-dark border border-secondary">{{ reg.tournament.game }}</span>
+                {% if reg.tournament.entry_fee == 0 %}
+                <span class="badge bg-success">FREE</span>
+                {% else %}
+                <span class="badge bg-info text-dark">₹{{ reg.tournament.entry_fee }}</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="small">
+                  <div><strong>Method:</strong> {{ reg.payment_method }}</div>
+                  <div><strong>Pay Status:</strong>
+                    {% if reg.payment_status == 'SUCCESS' %}<span class="text-green fw-bold">SUCCESS</span>
+                    {% elif reg.payment_status == 'PENDING' %}<span class="text-warning fw-bold">PENDING</span>
+                    {% else %}<span class="text-red">{{ reg.payment_status }}</span>{% endif %}
+                  </div>
+                  {% if reg.transaction_id %}
+                  <div><strong>Txn / UTR:</strong> <code>{{ reg.transaction_id }}</code></div>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                {% if reg.payment_proof %}
+                <a href="{{ reg.payment_proof.url }}" target="_blank" rel="noopener noreferrer">
+                  <img src="{{ reg.payment_proof.url }}" alt="Proof" style="width:48px;height:48px;object-fit:cover;border-radius:4px;border:1px solid #00F5FF;">
+                </a>
+                <br><a href="{{ reg.payment_proof.url }}" target="_blank" rel="noopener noreferrer" class="text-cyan" style="font-size:0.7rem;">View full</a>
+                {% else %}
+                <span class="text-secondary small">No proof</span>
+                {% endif %}
+              </td>
               <td>
                 {% if reg.status == 'CONFIRMED' %}<span class="badge bg-success">Confirmed</span>
                 {% elif reg.status == 'PENDING' %}<span class="badge bg-warning text-dark">Pending</span>
                 {% elif reg.status == 'CANCELLED' %}<span class="badge bg-secondary">Cancelled</span>
                 {% else %}<span class="badge bg-danger">{{ reg.status }}</span>{% endif %}
               </td>
-              <td class="text-secondary small">{{ reg.registered_at|date:"d M Y" }}</td>
+              <td class="text-secondary small">{{ reg.registered_at|date:"d M Y H:i" }}</td>
               <td>
-                {% if reg.status == 'PENDING' %}
-                <a href="{% url 'moderator:approve_registration' reg.id %}" class="btn btn-sm btn-arena-primary">✅ Confirm</a>
-                <a href="{% url 'moderator:reject_registration' reg.id %}" class="btn btn-sm btn-arena-ghost ms-1">❌ Cancel</a>
-                {% endif %}
+                <div class="d-flex flex-column gap-1">
+                  {% if reg.status == 'PENDING' %}
+                  <a href="{% url 'moderator:approve_registration' reg.id %}" class="btn btn-sm btn-arena-primary text-nowrap">
+                    ✅ Approve & Confirm
+                  </a>
+                  <a href="{% url 'moderator:reject_registration' reg.id %}" class="btn btn-sm btn-arena-ghost text-nowrap" onclick="return confirm('Reject registration for {{ reg.player.ign }}?')">
+                    ❌ Reject
+                  </a>
+                  {% elif reg.status == 'CONFIRMED' %}
+                  <a href="{% url 'moderator:reject_registration' reg.id %}" class="btn btn-sm btn-arena-ghost text-nowrap" style="color:#ff4444;border-color:rgba(255,68,68,0.3);" onclick="return confirm('Cancel confirmed registration for {{ reg.player.ign }}?')">
+                    Cancel Reg
+                  </a>
+                  {% elif reg.status == 'CANCELLED' %}
+                  <a href="{% url 'moderator:approve_registration' reg.id %}" class="btn btn-sm btn-arena-ghost text-nowrap" onclick="return confirm('Re-instate registration for {{ reg.player.ign }}?')">
+                    Re-instate
+                  </a>
+                  {% endif %}
+                </div>
               </td>
             </tr>
             {% empty %}
-            <tr><td colspan="6" class="text-center text-secondary py-4">No registrations found.</td></tr>
+            <tr><td colspan="8" class="text-center text-secondary py-4">No registrations found.</td></tr>
             {% endfor %}
           </tbody>
         </table>

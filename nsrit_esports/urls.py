@@ -13,7 +13,7 @@ ADMIN_URL = getattr(settings, 'ADMIN_URL', 'admin/')
 
 urlpatterns = [
     # ── Django Admin (hidden URL — change ADMIN_URL in .env for production) ──
-    path('admin/', admin.site.urls),  # ── uses ADMIN_URL from settings/.env
+    path(ADMIN_URL, admin.site.urls),  # ── uses ADMIN_URL from settings/.env
 
     # ── Home page ────────────────────────────────────────────────────────────
     path('', include('tournaments.urls_home')),

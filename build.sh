@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────
-# Render Build Script — NSRIT eSports Arena
+# Render Build Script — Vizag Esportz
 # ─────────────────────────────────────────────────────────────────
 set -o errexit
 
@@ -10,7 +10,10 @@ pip install -r requirements.txt
 python manage.py collectstatic --no-input
 python manage.py migrate
 
-# ── One-time: unlock all existing unverified accounts
+# ── Ensure super admin account is provisioned
+python manage.py create_admin
+
+# ── Unlock any unverified accounts
 python manage.py shell -c "
 from accounts.models import NSRITUser
 updated = NSRITUser.objects.filter(email_verified=False).update(email_verified=True)

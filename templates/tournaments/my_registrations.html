@@ -18,7 +18,14 @@
                         <td>{% if reg.tournament.entry_fee == 0 %}<span class="text-green fw-bold">FREE</span>{% else %}<span class="text-cyan fw-bold">₹{{ reg.tournament.entry_fee }}</span>{% endif %}</td>
                         <td><span class="status-badge status-{{ reg.status|lower }}">{{ reg.get_status_display }}</span></td>
                         <td class="text-secondary small">{{ reg.registered_at|date:"d M Y" }}</td>
-                        <td><a href="{{ reg.tournament.get_absolute_url }}" class="btn btn-arena-xs">View</a></td>
+                        <td>
+                            <div class="d-flex gap-1 justify-content-end">
+                                {% if reg.status == 'PENDING' and reg.tournament.entry_fee > 0 %}
+                                <a href="{% url 'payments:initiate' reg.tournament.slug %}" class="btn btn-arena-xs" style="background:#ffd700;color:#000;font-weight:700;">Pay Now</a>
+                                {% endif %}
+                                <a href="{{ reg.tournament.get_absolute_url }}" class="btn btn-arena-xs">View</a>
+                            </div>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

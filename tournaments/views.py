@@ -130,12 +130,35 @@ def register_tournament(request, slug):
         messages.error(request, 'Create your player profile first!')
         return redirect('players:create_profile')
 
-    if Registration.objects.filter(
+    existing_reg = Registration.objects.filter(
         player=player,
         tournament=tournament
-    ).exists():
-        messages.warning(request, '⚠️ You are already registered!')
-        return redirect('tournaments:detail', slug=slug)
+    ).first()
+
+    if existing_reg:
+        if existing_reg.status == 'CONFIRMED':
+            messages.warning(request, '⚠️ You are already registered for this tournament!')
+            return redirect('tournaments:detail', slug=slug)
+        elif existing_reg.status == 'PENDING':
+            if tournament.entry_fee > 0:
+                return redirect('payments:initiate', slug=slug)
+            else:
+                existing_reg.confirm(by_admin=True)
+                messages.success(request, f'✅ Registered for {tournament.title}!')
+                return redirect('tournaments:detail', slug=slug)
+        elif existing_reg.status == 'CANCELLED':
+            # Reset cancelled registration to allow re-registering
+            if not tournament.is_registration_open:
+                messages.error(request, 'Registration is closed.')
+                return redirect('tournaments:detail', slug=slug)
+            if tournament.entry_fee == 0:
+                existing_reg.confirm(by_admin=True)
+                messages.success(request, f'✅ Registered for {tournament.title}!')
+                return redirect('tournaments:detail', slug=slug)
+            else:
+                existing_reg.status = 'PENDING'
+                existing_reg.save(update_fields=['status'])
+                return redirect('payments:initiate', slug=slug)
 
     if not tournament.is_registration_open:
         messages.error(request, 'Registration is closed.')
@@ -195,20 +218,24 @@ def my_registrations(request):
 @staff_member_required
 def approve_registration(request, reg_id):
     if request.method != "POST":
-        return redirect('moderator_dashboard')
+        return redirect('moderator:dashboard')
 
     reg = get_object_or_404(Registration, id=reg_id)
 
     if reg.status != 'CONFIRMED':
-        reg.status = 'CONFIRMED'
-        reg.confirmed_at = timezone.now()
-        reg.save()
-
-        messages.success(request, f"{reg.player.ign} approved.")
+        success = reg.confirm(by_admin=True)
+        if success:
+            Payment.objects.filter(player=reg.player, tournament=reg.tournament).update(status='SUCCESS')
+            messages.success(request, f"✅ Registration for {reg.player.ign} approved.")
+        else:
+            messages.error(request, f"⚠️ Could not approve registration for {reg.player.ign}.")
     else:
         messages.info(request, "Already confirmed.")
 
-    return redirect('moderator_dashboard')
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    return redirect('tournaments:detail', slug=reg.tournament.slug)
 
 
 # ─────────────────────────────────────────────
@@ -217,13 +244,19 @@ def approve_registration(request, reg_id):
 @staff_member_required
 def reject_registration(request, reg_id):
     if request.method != "POST":
-        return redirect('moderator_dashboard')
+        return redirect('moderator:dashboard')
 
     reg = get_object_or_404(Registration, id=reg_id)
 
     reg.status = 'CANCELLED'
-    reg.save()
+    reg.save(update_fields=['status'])
+    Payment.objects.filter(player=reg.player, tournament=reg.tournament, status='PENDING').update(
+        status='FAILED', failure_reason='Rejected by moderator'
+    )
 
-    messages.warning(request, f"{reg.player.ign} rejected.")
+    messages.warning(request, f"Registration for {reg.player.ign} rejected.")
 
-    return redirect('moderator_dashboard')
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    return redirect('tournaments:detail', slug=reg.tournament.slug)

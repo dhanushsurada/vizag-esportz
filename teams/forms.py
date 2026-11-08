@@ -10,7 +10,7 @@ class TeamCreateForm(forms.ModelForm):
         fields = ['name', 'tag', 'game', 'description', 'logo', 'is_recruiting']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control cyber-input', 'placeholder': 'Team Name'}),
-            'tag': forms.TextInput(attrs={'class': 'form-control cyber-input', 'placeholder': 'NSR'}),
+            'tag': forms.TextInput(attrs={'class': 'form-control cyber-input', 'placeholder': 'VZG'}),
             'game': forms.Select(attrs={'class': 'form-select cyber-select'}),
             'description': forms.Textarea(attrs={'class': 'form-control cyber-input', 'rows': 3}),
             'logo': forms.FileInput(attrs={'class': 'form-control cyber-input'}),

@@ -102,10 +102,14 @@ def registrations(request):
 
 @moderator_required
 def approve_registration(request, reg_id):
-    """Confirm a pending registration."""
+    """Confirm a pending registration and verify payment."""
     reg = get_object_or_404(Registration, id=reg_id)
-    reg.confirm()
-    messages.success(request, f'✅ Registration for {reg.player.ign} confirmed.')
+    success = reg.confirm(by_admin=True)
+    if success:
+        Payment.objects.filter(player=reg.player, tournament=reg.tournament).update(status='SUCCESS')
+        messages.success(request, f'✅ Registration for {reg.player.ign} confirmed and payment verified.')
+    else:
+        messages.error(request, f'⚠️ Could not confirm registration for {reg.player.ign}.')
     return redirect('moderator:registrations')
 
 
@@ -114,7 +118,10 @@ def reject_registration(request, reg_id):
     """Cancel a registration."""
     reg = get_object_or_404(Registration, id=reg_id)
     reg.status = 'CANCELLED'
-    reg.save()
+    reg.save(update_fields=['status'])
+    Payment.objects.filter(player=reg.player, tournament=reg.tournament, status='PENDING').update(
+        status='FAILED', failure_reason='Rejected by moderator'
+    )
     messages.warning(request, f'Registration for {reg.player.ign} cancelled.')
     return redirect('moderator:registrations')
 
@@ -149,6 +156,19 @@ def payments(request):
         'summary': summary,
     }
     return render(request, 'moderator/payments.html', context)
+
+
+@moderator_required
+def mark_payment_success(request, payment_id):
+    """Manually approve/verify a payment."""
+    payment = get_object_or_404(Payment, id=payment_id)
+    payment.status = 'SUCCESS'
+    payment.save(update_fields=['status'])
+    reg = Registration.objects.filter(player=payment.player, tournament=payment.tournament).first()
+    if reg:
+        reg.confirm(by_admin=True)
+    messages.success(request, f'✅ Payment #{payment.id} marked as SUCCESS and registration confirmed.')
+    return redirect('moderator:payments')
 
 
 @moderator_required

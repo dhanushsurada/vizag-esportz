@@ -8,6 +8,7 @@ from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from django.contrib import messages
 from django.db import IntegrityError
+from django.utils import timezone
 import razorpay
 import json
 import hmac
@@ -26,7 +27,8 @@ def get_razorpay_client():
 
 @login_required
 def initiate_payment(request, slug):
-    """Create Razorpay order for tournament registration."""
+    """Create Razorpay order for tournament registration or prepare UPI flow."""
+    from django.utils import timezone
     tournament = get_object_or_404(Tournament, slug=slug, is_active=True)
 
     try:
@@ -35,7 +37,7 @@ def initiate_payment(request, slug):
         messages.error(request, 'Create your player profile first!')
         return redirect('players:create_profile')
 
-    # Layer 2: Server-side duplicate payment check
+    # Duplicate payment check
     if Payment.objects.filter(player=player, tournament=tournament, status='SUCCESS').exists():
         messages.warning(request, '⚠️ Payment already completed for this tournament!')
         return redirect('tournaments:detail', slug=slug)
@@ -44,52 +46,65 @@ def initiate_payment(request, slug):
         messages.warning(request, '⚠️ You are already registered for this tournament!')
         return redirect('tournaments:detail', slug=slug)
 
-    # Create Razorpay order
-    client = get_razorpay_client()
     amount_paise = tournament.entry_fee * 100  # Convert to paise
-
     receipt = f"vizag_esportz_{player.id}_{tournament.id}"
+    razorpay_order_id = None
+    payment = None
+
+    # Check if Razorpay keys are configured and not default dummy keys
+    has_custom_keys = (
+        settings.RAZORPAY_KEY_ID
+        and settings.RAZORPAY_KEY_SECRET
+        and settings.RAZORPAY_KEY_ID != 'rzp_test_key_id'
+    )
+
+    if has_custom_keys:
+        try:
+            client = get_razorpay_client()
+            order_data = {
+                'amount': amount_paise,
+                'currency': 'INR',
+                'receipt': receipt,
+                'notes': {
+                    'player_id': str(player.id),
+                    'tournament_id': str(tournament.id),
+                    'ign': player.ign,
+                }
+            }
+            razorpay_order = client.order.create(data=order_data)
+            razorpay_order_id = razorpay_order.get('id')
+        except Exception:
+            razorpay_order_id = None
+
+    fallback_order_id = razorpay_order_id or f"ve_pay_{player.id}_{tournament.id}_{int(timezone.now().timestamp())}"
 
     try:
-        order_data = {
-            'amount': amount_paise,
-            'currency': 'INR',
-            'receipt': receipt,
-            'notes': {
-                'player_id': str(player.id),
-                'tournament_id': str(tournament.id),
-                'ign': player.ign,
+        payment, created = Payment.objects.get_or_create(
+            player=player,
+            tournament=tournament,
+            defaults={
+                'razorpay_order_id': fallback_order_id,
+                'amount': amount_paise,
+                'receipt': receipt,
+                'status': 'PENDING',
             }
-        }
-        razorpay_order = client.order.create(data=order_data)
-
-        # Save payment record (PENDING)
-        try:
-            payment = Payment.objects.create(
-                player=player,
-                tournament=tournament,
-                razorpay_order_id=razorpay_order['id'],
-                amount=amount_paise,
-                receipt=receipt,
-                status='PENDING'
-            )
-        except IntegrityError:
-            # If pending payment exists, get it
-            payment = Payment.objects.get(player=player, tournament=tournament)
-            payment.razorpay_order_id = razorpay_order['id']
+        )
+        if not created and payment.status != 'SUCCESS':
+            if razorpay_order_id:
+                payment.razorpay_order_id = razorpay_order_id
             payment.status = 'PENDING'
+            payment.amount = amount_paise
             payment.save()
-
-    except Exception as e:
-        messages.error(request, f'Payment initiation failed: {str(e)}')
-        return redirect('tournaments:detail', slug=slug)
+    except Exception:
+        payment = Payment.objects.filter(player=player, tournament=tournament).first()
 
     context = {
         'tournament': tournament,
         'player': player,
         'payment': payment,
-        'razorpay_order_id': razorpay_order['id'],
-        'razorpay_key': settings.RAZORPAY_KEY_ID,
+        'razorpay_order_id': razorpay_order_id or '',
+        'razorpay_key': settings.RAZORPAY_KEY_ID if has_custom_keys else '',
+        'razorpay_enabled': bool(razorpay_order_id),
         'amount': amount_paise,
         'amount_inr': tournament.entry_fee,
         'currency': 'INR',
@@ -140,10 +155,18 @@ def payment_success(request):
         reg, created = Registration.objects.get_or_create(
             player=payment.player,
             tournament=payment.tournament,
-            defaults={'status': 'CONFIRMED'}
+            defaults={
+                'status': 'CONFIRMED',
+                'payment_status': 'SUCCESS',
+                'payment_method': 'RAZORPAY',
+                'transaction_id': razorpay_payment_id,
+            }
         )
         if not created:
-            reg.confirm()
+            reg.payment_status = 'SUCCESS'
+            reg.payment_method = 'RAZORPAY'
+            reg.transaction_id = razorpay_payment_id
+            reg.confirm(by_admin=True)
 
         messages.success(request,
             f'✅ Payment successful! You are registered for {payment.tournament.title}!')
@@ -264,32 +287,59 @@ def upi_submit(request, slug):
         messages.error(request, 'Please enter your Transaction ID / UTR number.')
         return redirect('payments:initiate', slug=slug)
 
-    if Registration.objects.filter(player=player, tournament=tournament).exists():
-        messages.warning(request, '⚠️ You already have a registration for this tournament.')
+    existing_reg = Registration.objects.filter(player=player, tournament=tournament).first()
+    if existing_reg and existing_reg.status == 'CONFIRMED':
+        messages.warning(request, '⚠️ You are already confirmed for this tournament.')
         return redirect('tournaments:detail', slug=slug)
 
     # Handle payment screenshot upload
     payment_screenshot = request.FILES.get('payment_screenshot')
 
     try:
-        reg = Registration.objects.create(
+        reg, created = Registration.objects.get_or_create(
             player=player,
             tournament=tournament,
-            status='PENDING',
-            payment_method='UPI',
-            payment_status='PENDING',
-            transaction_id=transaction_id,
+            defaults={
+                'status': 'PENDING',
+                'payment_method': 'UPI',
+                'payment_status': 'PENDING',
+                'transaction_id': transaction_id,
+            }
         )
+        if not created:
+            reg.status = 'PENDING'
+            reg.payment_method = 'UPI'
+            reg.payment_status = 'PENDING'
+            reg.transaction_id = transaction_id
+
         # Save screenshot if provided
         if payment_screenshot:
             reg.payment_proof = payment_screenshot
-            reg.save(update_fields=['payment_proof'])
+        reg.save()
+
+        # Update or create the Payment record so it is tracked in Payment history & Moderator Dashboard
+        amount_paise = tournament.entry_fee * 100
+        payment = Payment.objects.filter(player=player, tournament=tournament).first()
+        if payment:
+            payment.status = 'PENDING'
+            payment.receipt = f"upi_{player.id}_{tournament.id}_{transaction_id[:16]}"
+            payment.amount = amount_paise
+            payment.save()
+        else:
+            Payment.objects.create(
+                player=player,
+                tournament=tournament,
+                razorpay_order_id=f"upi_{player.id}_{tournament.id}_{int(timezone.now().timestamp())}",
+                amount=amount_paise,
+                receipt=f"upi_{player.id}_{tournament.id}_{transaction_id[:16]}",
+                status='PENDING'
+            )
 
     except Exception as e:
         messages.error(request, f'Submission failed: {str(e)}')
         return redirect('payments:initiate', slug=slug)
 
-    screenshot_note = ' Screenshot uploaded ✅' if payment_screenshot else ' No screenshot uploaded — please share it with admin.'
+    screenshot_note = ' Screenshot uploaded ✅' if payment_screenshot else ' (No screenshot uploaded).'
     messages.success(
         request,
         f'✅ Payment details submitted! Registration for {tournament.title} is pending admin verification. '

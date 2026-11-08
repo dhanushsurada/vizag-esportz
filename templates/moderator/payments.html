@@ -43,6 +43,7 @@
               <td class="text-secondary small">{{ p.created_at|date:"d M Y" }}</td>
               <td>
                 {% if p.status == 'PENDING' %}
+                <a href="{% url 'moderator:mark_payment_success' p.id %}" class="btn btn-sm btn-arena-primary me-1" onclick="return confirm('Verify and mark payment as SUCCESS?')">✅ Verify</a>
                 <a href="{% url 'moderator:mark_payment_failed' p.id %}" class="btn btn-sm btn-arena-ghost" onclick="return confirm('Mark as failed?')">❌ Fail</a>
                 {% endif %}
               </td>

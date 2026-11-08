@@ -1,22 +1,15 @@
 ## ─────────────────────────────────────────────────────────────────────────────
-## render.yaml — NSRIT eSports Arena
-## Declares the web service + PostgreSQL database as a single blueprint.
-## One-click deploy: Render Dashboard → Blueprints → New Blueprint Instance
+## render.yaml — Vizag Esportz
+## Web service deployed on Render with Neon Serverless PostgreSQL
 ## ─────────────────────────────────────────────────────────────────────────────
-
-databases:
-  - name: nsrit-esports-db
-    databaseName: nsrit_esports
-    user: nsrit_esports_user
-    plan: free                    # 1 GB SSD, expires after 90 days on free tier
 
 services:
   - type: web
-    name: nsrit-esports-arena
+    name: vizag-esportz
     runtime: python
     plan: free                    # Free tier: 512 MB RAM, 0.1 CPU, spins down after 15 min inactivity
     buildCommand: "./build.sh"
-    startCommand: "gunicorn nsrit_esports.wsgi:application --workers 1 --threads 2 --timeout 300 --log-file -"
+    startCommand: "gunicorn nsrit_esports.wsgi:application --workers 4 --threads 8 --worker-class gthread --timeout 120 --log-file -"
     envVars:
       - key: SECRET_KEY
         generateValue: true       # Render auto-generates a secure random value
@@ -25,22 +18,25 @@ services:
       - key: PYTHON_VERSION
         value: "3.11.0"
       - key: DATABASE_URL
-        fromDatabase:
-          name: nsrit-esports-db
-          property: connectionString
+        sync: false               # Set this to your Neon PostgreSQL connection string in Render Dashboard
       - key: RENDER_EXTERNAL_HOSTNAME
         fromService:
-          name: nsrit-esports-arena
+          name: vizag-esportz
           type: web
           property: host
       - key: ALLOWED_HOSTS
         fromService:
-          name: nsrit-esports-arena
+          name: vizag-esportz
           type: web
           property: host
-      # ── Fill these in manually after first deploy ──────────────────────────
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: "admin@vizagesportz.com"
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false               # Optional: set custom admin password, or defaults to Admin@1234
+      # ── Fill these in manually in Render Dashboard ──────────────────────────
+      # DATABASE_URL           → Neon Connection String (e.g. postgresql://user:pass@ep-xyz-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require)
       # EMAIL_HOST_USER        → your Gmail address
-      # EMAIL_HOST_PASSWORD    → Gmail App Password (not your login password)
+      # EMAIL_HOST_PASSWORD    → Gmail App Password
       # RAZORPAY_KEY_ID        → from Razorpay dashboard
       # RAZORPAY_KEY_SECRET    → from Razorpay dashboard
-      # ADMIN_URL              → something secret, e.g. nsrit-ctrl-x9k2/
+      # ADMIN_URL              → optional secret admin path, e.g. control-panel-x9k2/

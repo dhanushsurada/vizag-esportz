@@ -121,9 +121,12 @@
             <h5 class="rajdhani">Bracket Not Generated Yet</h5>
             <p class="text-secondary">The tournament bracket will be available once registration closes and matches are seeded.</p>
             {% if user.is_staff %}
-            <a href="{% url 'matches:generate_bracket' slug=tournament.slug %}" class="btn btn-arena-primary mt-3">
-                <i class="bi bi-shuffle me-2"></i>Generate Bracket (Admin)
-            </a>
+            <form method="post" action="{% url 'matches:generate_bracket' slug=tournament.slug %}" class="d-inline mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-arena-primary mt-3" onclick="return confirm('Generate tournament bracket from confirmed registrations?')">
+                    <i class="bi bi-shuffle me-2"></i>Generate Bracket (Admin)
+                </button>
+            </form>
             {% endif %}
         </div>
         {% endif %}

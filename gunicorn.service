@@ -7,12 +7,14 @@ User=www-data
 Group=www-data
 WorkingDirectory=/var/www/nsrit_esports
 ExecStart=/var/www/nsrit_esports/venv/bin/gunicorn \
-    --workers 3 \
+    --workers 4 \
+    --threads 8 \
+    --worker-class gthread \
     --bind unix:/run/gunicorn.sock \
     --access-logfile /var/log/gunicorn/access.log \
     --error-logfile /var/log/gunicorn/error.log \
     --log-level info \
-    --timeout 120 \
+    --timeout 60 \
     nsrit_esports.wsgi:application
 
 Restart=on-failure

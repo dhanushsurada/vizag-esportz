@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Resend Verification Email — Vizag Esportz{% endblock %}
 {% block content %}
 <section class="d-flex align-items-center justify-content-center py-5" style="min-height:85vh;">
@@ -6,12 +7,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-4 col-md-6">
         <div class="text-center mb-4">
-          <svg width="70" height="70" viewBox="0 0 70 70">
-            <polygon points="35,4 66,20 66,50 35,66 4,50 4,20" fill="none" stroke="#C41212" stroke-width="2"/>
-            <polygon points="35,14 56,26 56,44 35,56 14,44 14,26" fill="#C41212" opacity="0.2"/>
-            <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
-                  fill="#FFFFFF" font-family="Orbitron" font-size="18" font-weight="900">NSR</text>
-          </svg>
+          <img src="{% static 'images/vizag-esportz-logo.png' %}" alt="Vizag Esportz" width="64" height="64" class="mb-2">
           <h2 class="orbitron mt-2 mb-0" style="font-size:1.2rem;">
             Resend <span class="text-red">Verification</span>
           </h2>

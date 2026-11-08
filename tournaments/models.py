@@ -157,18 +157,21 @@ class Registration(models.Model):
     def __str__(self):
         return f"{self.player.ign} → {self.tournament.title}"
 
-    def confirm(self):
+    def confirm(self, by_admin=False):
         with transaction.atomic():
-            if self.payment_status != 'SUCCESS' and self.tournament.entry_fee > 0:
+            if by_admin:
+                self.payment_status = 'SUCCESS'
+            elif self.payment_status != 'SUCCESS' and self.tournament.entry_fee > 0:
                 return False
 
             # Check status + deadline only — NOT slots_remaining,
             # because this registration IS the slot being filled
             t = self.tournament
-            if not (t.status == 'REGISTRATION_OPEN'
-                    and t.registration_deadline > timezone.now()
-                    and t.is_active):
-                return False
+            if not by_admin:
+                if not (t.status == 'REGISTRATION_OPEN'
+                        and t.registration_deadline > timezone.now()
+                        and t.is_active):
+                    return False
 
             self.status = 'CONFIRMED'
             self.confirmed_at = timezone.now()

@@ -87,7 +87,17 @@ WSGI_APPLICATION = 'nsrit_esports.wsgi.application'
 DATABASE_URL = config('DATABASE_URL', default='')
 if DATABASE_URL:
     import dj_database_url
-    DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
+    db_config = dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=config('CONN_MAX_AGE', default=600, cast=int),
+        conn_health_checks=True,
+    )
+    # Ensure SSL is enabled for remote PostgreSQL (e.g. Neon)
+    if 'sqlite' not in db_config.get('ENGINE', '') and 'localhost' not in db_config.get('HOST', '') and '127.0.0.1' not in db_config.get('HOST', ''):
+        db_config.setdefault('OPTIONS', {})
+        db_config['OPTIONS'].setdefault('sslmode', 'require')
+
+    DATABASES = {'default': db_config}
 else:
     DATABASES = {
         'default': {
@@ -114,7 +124,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

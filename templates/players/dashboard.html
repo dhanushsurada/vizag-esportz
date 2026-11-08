@@ -193,6 +193,12 @@
                                 <div class="rajdhani fw-bold small">{{ player.primary_game }}</div>
                             </div>
                             <div class="col-4">
+                                <div class="text-secondary" style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;">Tier</div>
+                                <div class="rajdhani fw-bold small text-cyan">{{ player.tier }}</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-secondary" style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;">Points</div>
+                                <div class="rajdhani fw-bold small text-gold">{{ player.rank_points }}</div>
                             </div>
                         </div>
                         {% if player.bio %}
