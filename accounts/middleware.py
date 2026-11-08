@@ -37,57 +37,10 @@ def _get_client_ip(request):
 
 class AdminSecurityMiddleware(MiddlewareMixin):
     """
-    Protects the Django admin panel:
-
-    • Staff/Superuser requests → allowed through + logged without rate-limiting
-    • Unauthenticated requests → allowed access to admin login page (/admin/login/)
-    • Regular logged-in users  → 404 (admin URL is hidden from non-staff players)
-    • IP rate-limit on unauthenticated attempts → prevents brute-force login attacks
-    • Logs attempts in AdminAccessLog
+    Passthrough middleware for backward compatibility.
+    Django admin's built-in authentication and permission checks handle admin security cleanly.
     """
-
     def process_request(self, request):
-        admin_url = getattr(settings, 'ADMIN_URL', 'admin/')
-        # Normalise: strip leading slash
-        admin_prefix = admin_url.lstrip('/')
-        path_stripped = request.path.lstrip('/')
-
-        if not path_stripped.startswith(admin_prefix):
-            return None   # not an admin path — do nothing
-
-        client_ip = _get_client_ip(request)
-        user = getattr(request, 'user', None)
-        is_authenticated = user is not None and user.is_authenticated
-        is_staff = is_authenticated and (getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False))
-
-        # ── 1. Authenticated Staff / Superuser ────────────────────────────────
-        if is_staff:
-            self._log_attempt(request, 'ACCESS', client_ip, 'Staff access permitted')
-            return None
-
-        # ── 2. Authenticated Regular User (Non-staff) ─────────────────────────
-        if is_authenticated and not is_staff:
-            logger.warning(
-                f"Unauthorised admin access attempt: user={user.email} path={request.path} ip={client_ip}"
-            )
-            self._log_attempt(request, 'DENIED', client_ip, 'Authenticated non-staff user blocked')
-            raise Http404
-
-        # ── 3. Unauthenticated User ───────────────────────────────────────────
-        # Rate-limit unauthenticated requests to prevent brute force
-        now = timezone.now().timestamp()
-        window_start = now - ADMIN_RATE_WINDOW
-        attempts = [t for t in _admin_ip_attempts[client_ip] if t > window_start]
-        attempts.append(now)
-        _admin_ip_attempts[client_ip] = attempts
-
-        if len(attempts) > ADMIN_RATE_LIMIT * 5:  # allow up to 50 requests in 15 mins
-            logger.warning(f"Admin login rate-limit exceeded for IP {client_ip}")
-            self._log_attempt(request, 'DENIED', client_ip, 'Unauthenticated rate limit exceeded')
-            raise Http404
-
-        # Allow Django's admin login view, static assets, and redirect to login
-        # This lets admins navigate directly to /admin/ and see the login form
         return None
 
     def _log_attempt(self, request, action, ip, notes=''):

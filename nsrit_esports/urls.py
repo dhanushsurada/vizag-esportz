@@ -8,13 +8,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-# Pull the secret admin URL from settings (default: 'admin/')
-ADMIN_URL = getattr(settings, 'ADMIN_URL', 'admin/')
+# Clean admin url path
+_custom_admin_raw = getattr(settings, 'ADMIN_URL', 'admin/').strip('/')
+_custom_admin_path = f"{_custom_admin_raw}/" if _custom_admin_raw else 'admin/'
 
 urlpatterns = [
-    # ── Django Admin (hidden URL — change ADMIN_URL in .env for production) ──
-    path(ADMIN_URL, admin.site.urls),  # ── uses ADMIN_URL from settings/.env
+    # ── Standard Django Admin (always active at /admin/) ──
+    path('admin/', admin.site.urls),
+]
 
+if _custom_admin_path != 'admin/':
+    urlpatterns.insert(0, path(_custom_admin_path, admin.site.urls))
+
+urlpatterns += [
     # ── Home page ────────────────────────────────────────────────────────────
     path('', include('tournaments.urls_home')),
 

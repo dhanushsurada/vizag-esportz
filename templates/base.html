@@ -173,10 +173,8 @@
                         {% if user.is_staff or user.is_superuser %}
                         <li><a href="{% url 'moderator:dashboard' %}" class="text-red fw-bold">Moderator Panel</a></li>
                         {% endif %}
-                        {% if user.is_superuser %}
-                        <li><a href="/admin/" class="text-gold fw-bold">Admin Backend</a></li>
                         {% endif %}
-                        {% endif %}
+                        <li><a href="/admin/" class="text-gold">Admin Portal</a></li>
                     </ul>
                 </div>
 
