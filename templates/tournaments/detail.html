@@ -118,29 +118,60 @@
                     </div>
                 </div>
 
-                <!-- PRIZES -->
+                <!-- PRIZES & AWARDS -->
                 <div class="dashboard-hud mb-4">
-                    <div class="hud-title"><i class="bi bi-award-fill"></i>Prize Distribution</div>
+                    <div class="hud-title"><i class="bi bi-award-fill"></i>Awards & Prize Pool</div>
 
+                    {% if tournament.first_prize > 0 %}
                     <div class="row g-3 text-center">
                         <div class="col-4">
                             <div style="font-size:2rem;">🥇</div>
-                            <div class="text-secondary small">1st</div>
+                            <div class="text-secondary small">1st Place</div>
                             <div class="orbitron fw-bold text-gold">₹{{ tournament.first_prize }}</div>
                         </div>
 
                         <div class="col-4">
                             <div style="font-size:2rem;">🥈</div>
-                            <div class="text-secondary small">2nd</div>
+                            <div class="text-secondary small">2nd Place</div>
                             <div class="orbitron fw-bold text-silver">₹{{ tournament.second_prize }}</div>
                         </div>
 
                         <div class="col-4">
                             <div style="font-size:2rem;">🥉</div>
-                            <div class="text-secondary small">3rd</div>
+                            <div class="text-secondary small">3rd Place</div>
                             <div class="orbitron fw-bold text-bronze">₹{{ tournament.third_prize }}</div>
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row g-3 text-center">
+                        <div class="col-md-3 col-6">
+                            <div style="font-size:1.8rem;">🥇</div>
+                            <div class="text-secondary small">1st Place</div>
+                            <div class="orbitron fw-bold text-gold">Prize Pool Share</div>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <div style="font-size:1.8rem;">🥈</div>
+                            <div class="text-secondary small">2nd Place</div>
+                            <div class="orbitron fw-bold text-silver">Prize Pool Share</div>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <div style="font-size:1.8rem;">🥉</div>
+                            <div class="text-secondary small">3rd Place</div>
+                            <div class="orbitron fw-bold text-bronze">Prize Pool Share</div>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <div style="font-size:1.8rem;">🎖️</div>
+                            <div class="text-secondary small">Tournament MVP</div>
+                            <div class="orbitron fw-bold text-cyan">MVP Award</div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3 pt-2 border-top border-secondary border-opacity-25 text-secondary small">
+                        <i class="bi bi-info-circle text-cyan me-1"></i>Total Pool: <strong class="text-gold">₹{{ tournament.prize_pool }}+</strong> · Individual prize breakdown per placement will be announced prior to match day.
+                    </div>
+                    {% endif %}
                 </div>
 
                 <!-- RULES -->

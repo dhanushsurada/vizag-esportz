@@ -22,6 +22,26 @@ class Command(BaseCommand):
         # ── CREATE SAMPLE TOURNAMENTS ──
         tournaments_data = [
             {
+                'title': 'Vizag Free Fire Tournament',
+                'game': 'FREE_FIRE',
+                'mode': 'SQUAD',
+                'entry_fee': 200,
+                'max_players': 48,
+                'prize_pool': 2000,
+                'first_prize': 0,
+                'second_prize': 0,
+                'third_prize': 0,
+                'description': 'Official Vizag Free Fire Tournament on November 15, 2026. Squad battles (4–5 players per team) competing for a ₹2,000+ prize pool with 1st, 2nd, 3rd place, and MVP awards! Register online now to secure your slot.',
+                'rules': '1. Team Composition: Squad mode (4–5 players per team).\n2. Event Date: November 15, 2026.\n3. Fair Play: Strict zero-tolerance policy for hacks, modded APKs, emulators, or scripts.\n4. Registration Method: Online through official website with verified UPI payment proof.\n5. Awards: 1st, 2nd, 3rd place and MVP honors. Individual prize allocation will be announced prior to match day.\n6. Decision: Admin and tournament referee decisions are final.',
+                'status': 'REGISTRATION_OPEN',
+                'is_featured': True,
+                'start_date': datetime.date(2026, 11, 15),
+                'end_date': datetime.date(2026, 11, 15),
+                'registration_deadline': timezone.make_aware(datetime.datetime(2026, 11, 14, 23, 59, 59)),
+                'days_from_now': 7,
+                'deadline_days': 6,
+            },
+            {
                 'title': 'Vizag BGMI Championship Season 1',
                 'game': 'BGMI',
                 'mode': 'SQUAD',
@@ -128,9 +148,9 @@ class Command(BaseCommand):
                     status=data['status'],
                     is_featured=data['is_featured'],
                     is_active=True,
-                    start_date=timezone.now().date() + datetime.timedelta(days=data['days_from_now']),
-                    end_date=timezone.now().date() + datetime.timedelta(days=data['days_from_now'] + 2),
-                    registration_deadline=timezone.now() + datetime.timedelta(days=data['deadline_days']),
+                    start_date=data.get('start_date') or (timezone.now().date() + datetime.timedelta(days=data['days_from_now'])),
+                    end_date=data.get('end_date') or (timezone.now().date() + datetime.timedelta(days=data['days_from_now'] + 2)),
+                    registration_deadline=data.get('registration_deadline') or (timezone.now() + datetime.timedelta(days=data['deadline_days'])),
                 )
                 created_count += 1
                 self.stdout.write(f'  ✅ Created tournament: {data["title"]}')

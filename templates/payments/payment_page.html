@@ -64,26 +64,26 @@
 
                         <!-- QR Code Container -->
                         <div class="upi-qr-wrapper text-center p-3 mb-3" style="background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px solid rgba(0,245,255,0.25);">
-                            <div class="qr-container d-inline-block position-relative p-2" style="background: #ffffff; border-radius: 10px; box-shadow: 0 0 25px rgba(0,245,255,0.25);">
+                            <div class="qr-container d-inline-block position-relative p-2" style="background: #000000; border-radius: 12px; border: 2px solid #5f259f; box-shadow: 0 0 25px rgba(95,37,159,0.35);">
                                 <img id="upi-qr-img"
                                      src="{% static 'images/upi-qr.png' %}"
-                                     alt="Vizag Esportz UPI QR"
-                                     style="width: 210px; height: 210px; object-fit: contain; display: block;"
-                                     onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=210x210&data=upi://pay?pa={{ upi_id|default:"vizagesportz@upi" }}%26pn=Vizag%20Esportz%26am={{ amount_inr }}%26cu=INR%26tn=Tournament%20{{ tournament.id }}';">
+                                     alt="PhonePe UPI QR — S DHANUSH"
+                                     style="width: 220px; max-width: 100%; height: auto; object-fit: contain; display: block; border-radius: 8px;"
+                                     onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa={{ upi_id|default:"7207466448-2@ibl" }}%26pn=S%20DHANUSH%26am={{ amount_inr }}%26cu=INR%26tn=Tournament%20{{ tournament.id }}';">
                             </div>
                             <div class="mt-2 text-secondary small">
-                                <i class="bi bi-phone me-1"></i>Scan with Google Pay, PhonePe, Paytm, BHIM, or any UPI app
+                                <i class="bi bi-phone me-1"></i>Scan with <strong>PhonePe, Google Pay, Paytm, BHIM</strong> or any UPI app
                             </div>
                             <div class="mt-1 text-white fw-bold">
-                                Payable Amount: <span class="text-gold" style="font-size: 1.2rem;">₹{{ amount_inr }}</span>
+                                Payable Amount: <span class="text-gold" style="font-size: 1.25rem;">₹{{ amount_inr }}</span>
                             </div>
                         </div>
 
                         <!-- UPI ID Box with One-Click Copy -->
                         <div class="dashboard-hud p-3 text-center mb-3" style="background: rgba(0,245,255,0.03); border: 1px dashed rgba(0,245,255,0.35); border-radius: 8px;">
-                            <div class="text-secondary small mb-1">Official Vizag Esportz UPI ID:</div>
-                            <div class="orbitron fw-bold text-cyan" style="font-size: 1.2rem; letter-spacing: 0.5px;" id="upi-id-display">
-                                {{ upi_id|default:"vizagesportz@upi" }}
+                            <div class="text-secondary small mb-1">UPI ID (Payee: <strong>S DHANUSH</strong>):</div>
+                            <div class="orbitron fw-bold text-cyan" style="font-size: 1.25rem; letter-spacing: 0.5px;" id="upi-id-display">
+                                {{ upi_id|default:"7207466448-2@ibl" }}
                             </div>
                             <button type="button" onclick="copyUPI()" class="btn btn-arena-ghost btn-sm mt-2 px-3 py-1">
                                 <i class="bi bi-clipboard me-1"></i><span id="copy-btn-text">Copy UPI ID</span>
@@ -97,7 +97,7 @@
                             </div>
                             <ol class="text-secondary small ps-3 mb-0" style="line-height: 1.6;">
                                 <li>Open your UPI app (GPay, PhonePe, Paytm, etc.).</li>
-                                <li>Scan the QR code above or send <strong>₹{{ amount_inr }}</strong> to <code class="text-cyan">{{ upi_id|default:"vizagesportz@upi" }}</code>.</li>
+                                <li>Scan the QR code above or send <strong>₹{{ amount_inr }}</strong> to <code class="text-cyan">{{ upi_id|default:"7207466448-2@ibl" }}</code>.</li>
                                 <li>Copy the <strong>12-digit UTR / Transaction ID</strong> and take a screenshot of the confirmation.</li>
                                 <li>Submit both in the form below to lock in your registration.</li>
                             </ol>
