@@ -252,15 +252,19 @@ function previewScreenshot(input) {
     }
 }
 
-{% if razorpay_enabled %}
 function openRazorpay() {
+    var key = "{{ razorpay_key|default:'' }}";
+    if (!key || typeof Razorpay === 'undefined') {
+        alert('Online payment gateway is currently not available. Please use the UPI option above.');
+        return;
+    }
     var options = {
-        "key": "{{ razorpay_key }}",
-        "amount": "{{ amount }}",
-        "currency": "{{ currency }}",
+        "key": key,
+        "amount": "{{ amount|default:'0' }}",
+        "currency": "{{ currency|default:'INR' }}",
         "name": "Vizag Esportz",
         "description": "Tournament: {{ tournament.title|escapejs }}",
-        "order_id": "{{ razorpay_order_id }}",
+        "order_id": "{{ razorpay_order_id|default:'' }}",
         "prefill": {
             "name": "{{ user_name|escapejs }}",
             "email": "{{ user_email|escapejs }}",
@@ -278,6 +282,5 @@ function openRazorpay() {
     var rzp = new Razorpay(options);
     rzp.open();
 }
-{% endif %}
 </script>
 {% endblock %}
