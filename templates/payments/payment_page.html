@@ -183,7 +183,15 @@
 
                 <!-- Razorpay Panel (Secondary / Fallback View) -->
                 {% if razorpay_enabled %}
-                <div class="arena-form-card" id="razorpay-panel" style="display:none;">
+                <div class="arena-form-card" id="razorpay-panel" style="display:none;"
+                     data-key="{{ razorpay_key|default:'' }}"
+                     data-amount="{{ amount|default:'0' }}"
+                     data-currency="{{ currency|default:'INR' }}"
+                     data-title="{{ tournament.title|escapejs }}"
+                     data-order-id="{{ razorpay_order_id|default:'' }}"
+                     data-user-name="{{ user_name|escapejs }}"
+                     data-user-email="{{ user_email|escapejs }}"
+                     data-user-phone="{{ user_phone|escapejs }}">
                     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-25">
                         <h5 class="rajdhani text-white mb-0 fw-bold">
                             <i class="bi bi-credit-card text-cyan me-1"></i> Razorpay Gateway
@@ -253,22 +261,23 @@ function previewScreenshot(input) {
 }
 
 function openRazorpay() {
-    var key = "{{ razorpay_key|default:'' }}";
+    var panel = document.getElementById('razorpay-panel');
+    var key = panel ? panel.getAttribute('data-key') : '';
     if (!key || typeof Razorpay === 'undefined') {
         alert('Online payment gateway is currently not available. Please use the UPI option above.');
         return;
     }
     var options = {
         "key": key,
-        "amount": "{{ amount|default:'0' }}",
-        "currency": "{{ currency|default:'INR' }}",
+        "amount": panel.getAttribute('data-amount') || '0',
+        "currency": panel.getAttribute('data-currency') || 'INR',
         "name": "Vizag Esportz",
-        "description": "Tournament: {{ tournament.title|escapejs }}",
-        "order_id": "{{ razorpay_order_id|default:'' }}",
+        "description": "Tournament: " + (panel.getAttribute('data-title') || ''),
+        "order_id": panel.getAttribute('data-order-id') || '',
         "prefill": {
-            "name": "{{ user_name|escapejs }}",
-            "email": "{{ user_email|escapejs }}",
-            "contact": "{{ user_phone|escapejs }}"
+            "name": panel.getAttribute('data-user-name') || '',
+            "email": panel.getAttribute('data-user-email') || '',
+            "contact": panel.getAttribute('data-user-phone') || ''
         },
         "theme": { "color": "#C41212" },
         "handler": function(response) {
